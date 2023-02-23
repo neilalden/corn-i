@@ -1,4 +1,5 @@
 :root {
+	--border-radius: 6px;
 	--primary: #2db92d;
 	/* common */
 	--black: #000000;
@@ -133,6 +134,14 @@ h4,
 h5,
 h6 {
 	font-weight: bolder !important;
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+}
+a {
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
 }
 h1.title {
 	margin: 0;
@@ -150,6 +159,19 @@ h1.title {
 	background-position: center;
 	background-repeat: no-repeat;
 	/* background-size: cover; */
+}
+#graphContainer {
+	display: flex;
+	justify-content: center;
+	min-width: 500px;
+	width: 30vw;
+	height: 400px;
+}
+#chartContainer {
+	display: flex;
+	justify-content: center;
+	min-width: 1000px;
+	height: 400px;
 }
 .mask {
 	width: 485px;
@@ -176,22 +198,27 @@ h1.title {
 #sta_catalina_norte {
 	width: 470px;
 }
-.chartContainer {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-width: 500px;
-	width: 70vw;
-	height: 400px !important;
-	border: 2px solid var(--primary);
-	margin-left: 10px;
-}
 .flex-row {
 	display: flex;
 	flex-direction: row;
 }
 .justify-content-between {
 	justify-content: space-between;
+}
+.justify-content-center {
+	justify-content: center;
+}
+.justify-content-evenly {
+	justify-content: space-evenly;
+}
+.justify-content-around {
+	justify-content: space-around;
+}
+.justify-content-start {
+	justify-content: flex-start;
+}
+.justify-content-end {
+	justify-content: flex-end;
 }
 nav {
 	margin-bottom: 48px;
@@ -200,10 +227,16 @@ nav {
 	color: var(--gray500);
 	cursor: pointer;
 	font-size: 18;
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
 }
 .nav-link-active {
 	text-decoration: none;
 	color: var(--primary);
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
 }
 .nav-image {
 	width: 50px;
@@ -223,7 +256,7 @@ select,
 #mapSelect {
 	margin: 8px 0;
 	padding: 8px;
-	border-radius: 8px;
+	border-radius: var(--border-radius);
 	border-width: 0;
 	background-color: var(--gray200);
 	border-right: 8px solid transparent;
@@ -231,7 +264,32 @@ select,
 .disabled {
 	cursor: not-allowed;
 }
-#border-box {
+.border-box {
 	padding: 10px;
 	border: var(--primary) 2px solid;
+}
+rect:hover,
+path:hover {
+	fill: transparent;
+	cursor: pointer;
+}
+.mt-20 {
+	margin-top: 20px;
+}
+.button {
+	cursor: pointer;
+	background: var(--primary);
+	border: var(--primary) 2px solid;
+	border-radius: var(--border-radius);
+	transition-duration: 200ms;
+	padding: 2.5px 5px;
+	color: var(--white);
+	-webkit-user-select: none; /* Safari */
+	-ms-user-select: none; /* IE 10 and IE 11 */
+	user-select: none; /* Standard syntax */
+	margin-bottom: 2px;
+}
+.button:hover {
+	background: transparent;
+	color: var(--primary);
 }
