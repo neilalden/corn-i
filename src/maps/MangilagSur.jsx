@@ -4,7 +4,7 @@ import MangilagSurSVG from "../svgs/MangilagSurSVG";
 
 const MangilagSur = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

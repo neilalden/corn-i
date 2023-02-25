@@ -4,7 +4,7 @@ import MalabananSurSVG from "../svgs/MalabananSurSVG";
 
 const MalabananSur = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

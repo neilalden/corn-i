@@ -4,7 +4,7 @@ import SanAndresSVG from "../svgs/SanAndresSVG";
 
 const SanAndres = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

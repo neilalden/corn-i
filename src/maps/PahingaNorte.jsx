@@ -3,7 +3,7 @@ import { Images } from "../common/images";
 import PahingaNorteSVG from "../svgs/PahingaNorteSVG";
 const PahingaNorte = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

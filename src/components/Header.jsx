@@ -11,6 +11,9 @@ const Header = () => {
 	};
 	const changeCategory = (category) => {
 		setCategory(category);
+		if (category === Category.Nutrients)
+			setParameter(NutrientsParameter.pH);
+		else setParameter(undefined);
 	};
 	const changeParameter = (parameter) => {
 		setParameter(parameter);
@@ -75,10 +78,41 @@ const Header = () => {
 						<img
 							alt='icon'
 							src={
-								parameter === NutrientsParameter.Nitrogen
-									? Images.ic_nitrogen_green_outline
-									: Images.ic_nitrogen_gray_fill
+								parameter === NutrientsParameter.Temperature
+									? Images.ic_temperature_green_outline
+									: Images.ic_temperature_gray_fill
 							}
+							onClick={() => changeParameter(NutrientsParameter.Temperature)}
+							className='nav-image'
+						/>
+						<img
+							alt='icon'
+							src={
+								parameter === NutrientsParameter.Humidity
+									? Images.ic_humidity_green_outline
+									: Images.ic_humidity_gray_fill
+							}
+							onClick={() => changeParameter(NutrientsParameter.Humidity)}
+							className='nav-image'
+						/>
+						<img
+							alt='icon'
+							src={
+								parameter === NutrientsParameter.Rainfall
+									? Images.ic_rainfall_green_outline
+									: Images.ic_rainfall_gray_fill
+							}
+							onClick={() => changeParameter(NutrientsParameter.Rainfall)}
+							className='nav-image'
+						/>
+						<img
+							alt='icon'
+							src={
+								parameter === NutrientsParameter.pH
+									? Images.ic_ph_green_outline
+									: Images.ic_ph_gray_fill
+							}
+							onClick={() => changeParameter(NutrientsParameter.pH)}
 							className='nav-image'
 						/>
 					</React.Fragment>

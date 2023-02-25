@@ -4,7 +4,7 @@ import StaCatalinaNorteSVG from "../svgs/StaCatalinaNorteSVG";
 
 const StaCatalinaNorte = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

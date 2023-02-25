@@ -4,7 +4,7 @@ import MalabananNorteSVG from "../svgs/MalabananNorteSVG";
 
 const MalabananNorte = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{

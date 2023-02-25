@@ -2,9 +2,9 @@ import React from "react";
 import { Images } from "../common/images";
 import BukalSurSVG from "../svgs/BukalSurSVG";
 
-const MasalukotI = () => {
+const BukalSur = () => {
 	return (
-		<div id='border-box'>
+		<div className='border-box'>
 			<div
 				id='maskContainer'
 				style={{
@@ -17,4 +17,4 @@ const MasalukotI = () => {
 	);
 };
 
-export default MasalukotI;
+export default BukalSur;
