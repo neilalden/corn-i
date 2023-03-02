@@ -1,3 +1,4 @@
 const minValue = 0;
 const maxValue = 140;
-export { minValue, maxValue };
+const interval = 14;
+export const NitrogenParameter = { minValue, maxValue, interval };

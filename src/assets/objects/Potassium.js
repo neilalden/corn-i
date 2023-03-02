@@ -1,3 +1,3 @@
 const minValue = 0;
 const maxValue = 205;
-export { minValue, maxValue };
+export const PotassiumParameter = { minValue, maxValue, interval: 20.5 };

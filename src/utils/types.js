@@ -1,6 +1,7 @@
 export const Screens = {
 	Dashboard: "Dashboard",
 	DataInput: "DataInput",
+	DataRecord: "DataRecord",
 };
 export const Maps = {
 	BukalSur: "Bukal Sur",
@@ -24,7 +25,7 @@ export const Category = {
 
 export const NutrientsParameter = {
 	Nitrogen: "Nitrogen",
-	Phosporus: "Phosporus",
+	Phosphorus: "Phosphorus",
 	Potassium: "Potassium",
 	pH: "pH",
 	Temperature: "Temperature",

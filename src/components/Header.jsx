@@ -78,31 +78,31 @@ const Header = () => {
 						<img
 							alt='icon'
 							src={
-								parameter === NutrientsParameter.Temperature
-									? Images.ic_temperature_green_outline
-									: Images.ic_temperature_gray_fill
+								parameter === NutrientsParameter.Nitrogen
+									? Images.ic_nitrogen_green_outline
+									: Images.ic_nitrogen_gray_fill
 							}
-							onClick={() => changeParameter(NutrientsParameter.Temperature)}
+							onClick={() => changeParameter(NutrientsParameter.Nitrogen)}
 							className='nav-image'
 						/>
 						<img
 							alt='icon'
 							src={
-								parameter === NutrientsParameter.Humidity
-									? Images.ic_humidity_green_outline
-									: Images.ic_humidity_gray_fill
+								parameter === NutrientsParameter.Phosphorus
+									? Images.ic_phosphorus_green_outline
+									: Images.ic_phosphorus_gray_fill
 							}
-							onClick={() => changeParameter(NutrientsParameter.Humidity)}
+							onClick={() => changeParameter(NutrientsParameter.Phosphorus)}
 							className='nav-image'
 						/>
 						<img
 							alt='icon'
 							src={
-								parameter === NutrientsParameter.Rainfall
-									? Images.ic_rainfall_green_outline
-									: Images.ic_rainfall_gray_fill
+								parameter === NutrientsParameter.Potassium
+									? Images.ic_potassium_green_outline
+									: Images.ic_potassium_gray_fill
 							}
-							onClick={() => changeParameter(NutrientsParameter.Rainfall)}
+							onClick={() => changeParameter(NutrientsParameter.Potassium)}
 							className='nav-image'
 						/>
 						<img

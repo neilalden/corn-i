@@ -35,9 +35,14 @@ const ChartComponent = (props) => {
 		annnotationPosition,
 		setAnnnotationPosition,
 		recordedData,
-		predictedData, heatMapItems, heatMapItemsValue, setHeatMapItemsValue
+		predictedData,
+		heatMapItems,
+		heatMapItemsValue,
+		setHeatMapItemsValue
 	} = useContext(Context);
+
 	const chartRef = useRef();
+
 	const onClick = (event, index) => {
 		try {
 			if (!chartRef.current) return;
@@ -118,7 +123,7 @@ const ChartComponent = (props) => {
 			</div>
 			<div className='border-box' id='chartContainer'>
 				<Line
-					className='h-100px'
+					className="h-100px"
 					data={data}
 					options={options}
 					ref={chartRef}
@@ -129,7 +134,7 @@ const ChartComponent = (props) => {
 };
 
 // array is sorted by date
-const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) => {
+export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) => {
 	const num_crop_group = heatMapItems && heatMapItems.length < 25 ? heatMapItems.length : 25
 	if (!Array.isArray(array) || !array.length) return []
 	const res = [];
@@ -179,8 +184,8 @@ const dashed = (ctx, value) => {
 const getAvg = (arr) => {
 	let avg = 0;
 	arr?.map(num => {
-		avg += (num.y)
-	})
+		avg += Number(num.y)
+	});
 	return avg / arr.length
 }
 export default ChartComponent;

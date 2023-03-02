@@ -1,4 +1,7 @@
+import { NitrogenParameter } from "../assets/objects/Nitrogen";
 import { pHParameter } from "../assets/objects/pH";
+import { PhosphorusParameter } from "../assets/objects/Phosphorus";
+import { PotassiumParameter } from "../assets/objects/Potassium";
 import { TemperatureParameter } from "../assets/objects/Temperature";
 import { NutrientsParameter } from "../utils/types";
 import { COLOR } from "./colors";
@@ -42,61 +45,77 @@ export const isString = (string) => {
 	return false;
 };
 
-export const objectKeyHasValue = (obj, key) =>{
-	if(obj[key] !== undefined) return true
-	return false
-}
+export const objectKeyHasValue = (obj, key) => {
+	if (obj[key] !== undefined) return true;
+	return false;
+};
 
-export const sortArrOfObj = (arr, value)=>{
-return arr.sort((a, b)=> {
-  return a[value] - b[value]
-});
-}
+export const sortArrOfObj = (arr, value) => {
+	return arr.sort((a, b) => {
+		return a[value] - b[value];
+	});
+};
 
-
-export const findAreaColor = (
-	parameter,
-	value, 
-  ) => {
-	  let parameterObj;
-	if(parameter === NutrientsParameter.Temperature){
-		parameterObj = TemperatureParameter
-	}else if(parameter === NutrientsParameter.pH){
-		parameterObj = pHParameter
-	}else{
-		parameterObj = pHParameter
-
+export const findAreaColor = (parameter, value) => {
+	let parameterObj;
+	if (parameter === NutrientsParameter.Temperature) {
+		parameterObj = TemperatureParameter;
+	} else if (parameter === NutrientsParameter.pH) {
+		parameterObj = pHParameter;
+	} else if (parameter === NutrientsParameter.Nitrogen) {
+		parameterObj = NitrogenParameter;
+	} else if (parameter === NutrientsParameter.Phosphorus) {
+		parameterObj = PhosphorusParameter;
+	} else {
+		parameterObj = PotassiumParameter;
 	}
-	let color = ""
+	let color = "";
 	for (
-	  let i = 0, j = 0;
-	  i <= parameterObj.maxValue;
-	  i = parseFloat((i + parameterObj.interval).toFixed(3)), j += 1
+		let i = 0, j = 0;
+		i <= parameterObj.maxValue;
+		i = parseFloat((i + parameterObj.interval).toFixed(3)), j += 1
 	) {
-	  // this logic is up for debate, i may be confused
-	  if (i >= parameterObj.maxValue) j -= 1;
-	  // if (i <= parameterObj.lowValue) j = 0;
-	  if (i <= value) {
-		color = COLOR[j];
-	  }
+		// this logic is up for debate, i may be confused
+		if (i >= parameterObj.maxValue) j -= 1;
+		// if (i <= parameterObj.lowValue) j = 0;
+		if (i <= value) {
+			color = COLOR[j];
+		}
 	}
-	return(color);
-  };
+	return color;
+};
 
 export const predictParam = async (input) => {
-	const data = await fetch(
-		"http://neilalden.pythonanywhere.com/forecast/ph",
-		{
-			mode: "no-cors",
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(input),
-		},
-	);
+	const data = await fetch("http://neilalden.pythonanywhere.com/forecast/ph", {
+		mode: "no-cors",
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(input),
+	});
 	return await data?.json();
 };
 
+export const csvJSON = (csv) => {
+	var lines = csv.split("\n");
 
+	var result = [];
+
+	var headers = lines[0].split(",");
+
+	for (var i = 1; i < lines.length; i++) {
+		var obj = {};
+		var currentline = lines[i].split(",");
+
+		for (var j = 0; j < headers.length; j++) {
+			obj[headers[j]] = currentline[j];
+		}
+
+		result.push(obj);
+	}
+
+	//return result; //JavaScript object
+	return JSON.stringify(result); //JSON
+};
 
 // add data manually
 // const x = [
@@ -117,4 +136,3 @@ export const predictParam = async (input) => {
 // 	}
 // 	createData(parameter, data)
 // })
-// console.log(arr)

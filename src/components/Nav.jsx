@@ -13,19 +13,25 @@ function Nav() {
 			<div className='flex-row nav-button-container'>
 				<a onClick={() => navigate(Screens.Dashboard)}>
 					<h3
-						className={`nav-link ${
-							screen === Screens.Dashboard ? "nav-link-active" : ""
-						}`}>
+						className={`nav-link ${screen === Screens.Dashboard ? "nav-link-active" : ""
+							}`}>
 						Pag mamapa at Pag tataya
+					</h3>
+				</a>
+				<h3>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</h3>
+				<a onClick={() => navigate(Screens.DataRecord)}>
+					<h3
+						className={`nav-link ${screen === Screens.DataRecord ? "nav-link-active" : ""
+							}`}>
+						Lingguhang Talaarawan
 					</h3>
 				</a>
 				<h3>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</h3>
 				<a onClick={() => navigate(Screens.DataInput)}>
 					<h3
-						className={`nav-link ${
-							screen === Screens.DataInput ? "nav-link-active" : ""
-						}`}>
-						Lingguhang Talaarawan
+						className={`nav-link ${screen === Screens.DataInput ? "nav-link-active" : ""
+							}`}>
+						Mag-upload Ng Data
 					</h3>
 				</a>
 			</div>

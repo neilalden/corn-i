@@ -45,22 +45,22 @@ export const RECORDED_DATA = [
 	},
 	{
 		value: 42,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAgo(3 * 7),
 	},
 	{
 		value: 58,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAgo(2 * 7),
 	},
 	{
 		value: 55,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAgo(1 * 7),
 	},
 	{
 		value: 35,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAgo(0 * 7),
 	},
 	{
@@ -167,22 +167,22 @@ export const PREDICTED_DATA = [
 	},
 	{
 		value: 42,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAfter(1 * 7),
 	},
 	{
 		value: 37,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAfter(2 * 7),
 	},
 	{
 		value: 55,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAfter(3 * 7),
 	},
 	{
 		value: 53,
-		parameter: NutrientsParameter.Phosporus,
+		parameter: NutrientsParameter.Phosphorus,
 		date: getDaysAfter(4 * 7),
 	},
 	{

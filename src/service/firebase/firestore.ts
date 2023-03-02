@@ -11,7 +11,6 @@ import {
 	where,
 	WhereFilterOp,
 } from "firebase/firestore";
-import { isString } from "../../common/utils";
 import { firestore } from "./config";
 
 export const createData = async (
