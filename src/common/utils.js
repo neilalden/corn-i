@@ -6,11 +6,13 @@ import { TemperatureParameter } from "../assets/objects/Temperature";
 import { NutrientsParameter } from "../utils/types";
 import { COLOR } from "./colors";
 
-export const getDaysAgo = (days, date = new Date()) => {
+export const getDaysAgo = (days, d) => {
+	const date = d ? new Date(d) : new Date();
 	date.setDate(date.getDate() - days);
 	return date;
 };
-export const getDaysAfter = (days, date = new Date()) => {
+export const getDaysAfter = (days, d) => {
+	const date = d ? new Date(d) : new Date();
 	date.setDate(date.getDate() + days);
 	return date;
 };

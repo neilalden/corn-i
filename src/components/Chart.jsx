@@ -60,14 +60,14 @@ const ChartComponent = (props) => {
 	};
 	const handleAnimate = (event) => {
 		const ANIMATIONSPEED = 1000;
-		for (let i = 0; i < 4; i++) {
+		for (let i = 0; i < 8; i++) {
 			setTimeout(() => {
 				onClick(undefined, i)
 			}, i * ANIMATIONSPEED);
 		}
 	}
-	const datasets = formatDataToDisplay(
-		sortArrOfObj(recordedData, "cropGroup"), heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter)
+	const datasets = recordedData ? formatDataToDisplay(
+		sortArrOfObj(recordedData, "cropGroup"), heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) : []
 	const data = {
 		datasets: datasets,
 	};
@@ -135,7 +135,6 @@ const ChartComponent = (props) => {
 
 // array is sorted by date
 export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) => {
-	const num_crop_group = heatMapItems && heatMapItems.length < 25 ? heatMapItems.length : 25
 	if (!Array.isArray(array) || !array.length) return []
 	const res = [];
 	const cropGroups = [];
@@ -148,15 +147,13 @@ export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setH
 			isPrediction: item?.isPrediction
 		}
 		temp.push(data);
-		if (temp.length === 4) {
+		if (temp.length === 8) {
 			cropGroups.push(temp);
 			temp = []
 		}
 	}
 	if (!heatMapItemsValue) setHeatMapItemsValue(cropGroups)
-	cropGroups.map((item, i) => {
-
-		if (res.length === num_crop_group) return res;
+	sortArrOfObj(cropGroups, "date").map((item, i) => {
 		res.push({
 			label: `Crop Group ${i + 1}`,
 			data: item,

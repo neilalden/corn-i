@@ -7,7 +7,7 @@ import { Timestamp } from "firebase/firestore";
 import { getDaysAfter, sortArrOfObj } from "../common/utils";
 
 const DataInputScreen = () => {
-	const { parameter } = useContext(Context)
+	const { parameter, setRefetch, map } = useContext(Context)
 	const [dataFrame, setDataFrame] = useState([])
 	const commonConfig = { delimiter: "," };
 	const handleUploadData = (event) => {
@@ -18,62 +18,18 @@ const DataInputScreen = () => {
 			for (const key of rowKeys) {
 				if (key.toLowerCase() === "date") continue;
 				const data = {
-					value: row[key],
+					value: Number(row[key]),
 					date: Timestamp.fromDate(new Date(date)),
-					cropGroup: key
-				}
-
-				const sorted = sortArrOfObj(dataFrame.map(data => ({ ...data, "date": new Date(data.Date || data.date) })), "date", "asc");
-				const latestDate = sorted[0].date
-				const cropGroup = []
-				for (let i = 0; i < 4; i++) {
-					const keys = Object.keys(sorted[i])
-					for (let j = 0; j < keys.length; j++) {
-						const value = Number(sorted[i][keys[j]])
-						if (isNaN(keys[j])) continue;
-						if (Array.isArray(cropGroup[i])) cropGroup[i].push(value)
-						else cropGroup.push([value])
-					}
-				}
-				const toPredict = (Object.keys(cropGroup[0]).map((_, colIndex) => (cropGroup).map(row => {
-					const value = row[colIndex];
-					if (!isNaN(value) && typeof value !== 'undefined') return Number(value)
-				})))
-				for (let i = 0; i < toPredict.length; i++) {
-					for (let j = 0; j < 4; j++) {
-						predict(toPredict[i]).then(res => {
-							toPredict[i].pop();
-							toPredict[i].unshift(Number((res.prediction?.toFixed(2))))
-							if (i === 3 && j === 3) {
-								toPredict.map((_, x) => {
-									_.map((__, y) => {
-										const predData = {
-											value: __,
-											date: Timestamp.fromDate(getDaysAfter(x + 1 * 7, latestDate)),
-											cropGroup: y + 1,
-											isPrediction: true
-										}
-										createData(parameter, predData).then(result => {
-											// if (result && index === dataFrame.length - 2 && dataFrame.length > 0) {
-											// 	setDataFrame([]);
-											// }
-											if (x === toPredict.length - 1 && y === toPredict[0].length - 1)
-												console.log(result)
-											alert("success!")
-										})
-									})
-								})
-							}
-						})
-					}
+					cropGroup: Number(key),
+					map: map
 				}
 				createData(parameter, data).then(result => {
 					if (result && index === dataFrame.length - 2 && dataFrame.length > 0) {
-						setDataFrame([]);
 					}
 				})
 			}
 		}
+		uploadPrediction(map, parameter, dataFrame, setDataFrame, setRefetch)
 	}
 	const handleOpenFile = (event) => {
 		try {
@@ -141,5 +97,59 @@ const DataInputScreen = () => {
 		</div>
 	);
 };
+
+const uploadPrediction = (map, parameter, dataFrame, setDataFrame, setRefetch) => {
+	const sorted = sortArrOfObj(dataFrame.map(data => ({ ...data, "date": new Date(data.Date || data.date) })), "date", "asc");
+	const latestDate = sorted[0].date
+	const cropGroup = []
+	for (let i = 0; i < 4; i++) {
+		const keys = Object.keys(sorted[i])
+		for (let j = 0; j < keys.length; j++) {
+			const value = Number(sorted[i][keys[j]])
+			if (isNaN(keys[j])) continue;
+			if (Array.isArray(cropGroup[i])) cropGroup[i].push(value)
+			else cropGroup.push([value])
+		}
+	}
+	const toPredict = (Object.keys(cropGroup[0]).map((_, colIndex) => (cropGroup).map(row => {
+		const value = row[colIndex];
+		if (!isNaN(value) && typeof value !== 'undefined') return Number(value)
+	})))
+	for (let i = 0; i < toPredict.length; i++) {
+		for (let j = 0; j < 4; j++) {
+			predict(toPredict[i]).then(res => {
+				toPredict[i].pop();
+				toPredict[i].unshift(Number((res.prediction?.toFixed(2))))
+				if (res && i === toPredict.length - 1 && j === 3) {
+					const temp = []
+					for (let ii = 0; ii < toPredict.length; ii++) {
+						const cropGroup = ii + 1;
+						const row = toPredict[ii];
+						for (let jj = 0; jj < row.length; jj++) {
+							const cellValue = row[jj];
+							const data = {
+								isPrediction: true,
+								value: Number(cellValue),
+								cropGroup: cropGroup,
+								date: Timestamp.fromDate(getDaysAfter((jj + 1) * 7, new Date(latestDate))),
+								map: map
+							}
+							temp.push(data)
+						}
+					}
+					temp.map((tempData, tempIdx) => {
+						createData(parameter, tempData).then(res => {
+							if (res && tempIdx === temp.length - 1) {
+								alert("success!")
+								setDataFrame([]);
+								setRefetch(true)
+							}
+						})
+					})
+				}
+			})
+		}
+	}
+}
 
 export default DataInputScreen;

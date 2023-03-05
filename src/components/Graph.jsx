@@ -53,8 +53,8 @@ const Graph = () => {
 			},
 		},
 	};
-	const data = formatDataToDisplay(
-		sortArrOfObj(recordedData, "cropGroup"), heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter)
+	const data = recordedData ? formatDataToDisplay(
+		sortArrOfObj(recordedData, "cropGroup"), heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) : []
 	return (
 		<div>
 			<code>Yield Predictions</code>

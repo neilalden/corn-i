@@ -13,7 +13,7 @@ import {
 	readDocument,
 } from "./service/firebase/firestore";
 import { findAreaColor, getDaysAgo, objectKeyHasValue, predictParam } from "./common/utils";
-import { collection, Timestamp } from "firebase/firestore";
+import { collection, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { firestore } from "./service/firebase/config";
 
 export const Context = createContext("Default Value");
@@ -29,34 +29,29 @@ const ContextProvider = (props) => {
 	const [recordedDataDictionary, setRecordedDataDictionary] = useState({})
 	const [recordedData, setRecordedData] = useState([]);
 	const [predictedData, setPredictedData] = useState(PREDICTED_DATA);
+	const [refetch, setRefetch] = useState(false)
 	useEffect(() => {
 		(async () => {
 			if (!heatMapItems) return
-			if (objectKeyHasValue(recordedDataDictionary, parameter)) {
-				setRecordedData(recordedDataDictionary[parameter])
+			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(parameter + map))) {
+				setRecordedData(recordedDataDictionary[String(parameter + map)])
 			} else {
 				const result = (
 					await readCollection(
 						parameter,
-						readCollectionQuery(
-							collection(firestore, parameter),
-							// { arg1: "date", arg2: ">", arg3: Timestamp.fromDate(new Date(Date.parse("Nov 3, 2023"))) } 
-							{ arg1: "date", arg2: ">", arg3: Timestamp.fromDate(new Date()) }
-							// undefined
-							,
-							"date", 5 * heatMapItems.length
-						),
+						query(collection(firestore, parameter), where("date", ">", Timestamp.fromDate(new Date())), where("map", "==", map), orderBy("date"), limit(8 * heatMapItems.length))
 					)
 				);
-				console.log(result)
 				setRecordedDataDictionary(prev => ({
 					...prev,
 					[parameter]: result
 				}));
-				setRecordedData(result)
+				setRecordedData(result);
+				setRefetch(false)
 			}
 		})();
-	}, [parameter, heatMapItems]);
+	}, [parameter, heatMapItems, refetch, map]);
+
 	useEffect(() => {
 		if (heatMapItems && heatMapItemsValue?.length > 0) (mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter))
 	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition])
@@ -80,7 +75,7 @@ const ContextProvider = (props) => {
 		recordedData,
 		predictedData,
 		heatMapItemsValue,
-		setHeatMapItemsValue
+		setHeatMapItemsValue, refetch, setRefetch
 	};
 	return <Context.Provider value={State}>{props.children}</Context.Provider>;
 };
@@ -107,5 +102,5 @@ export const predict = (input) => {
 	)
 		.then((response) => response?.json())
 		.then((response) => response)
-		.catch(e => console.log(e))
+		.catch(e => console.error(e))
 };

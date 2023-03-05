@@ -4,8 +4,9 @@ import Header from "../components/Header";
 import { Context } from "../Context";
 
 const DataRecordScreen = () => {
+    const [asc, setAsc] = useState(false)
     const { recordedData, heatMapItems } = useContext(Context);
-    const sorted = sortArrOfObj(recordedData, "date");
+    const sorted = sortArrOfObj(recordedData, "date", asc ? "asc" : "desc");
     const rows = getRows(sorted, heatMapItems?.length);
     return (
         <div>
@@ -13,7 +14,9 @@ const DataRecordScreen = () => {
             <main><table>
                 <thead>
                     <tr>
-                        <th>Date</th>
+                        <th style={{
+                            cursor: "pointer"
+                        }} onClick={() => setAsc(prev => !prev)}>Date {asc ? "▲" : "▼"}</th>
                         {
                             heatMapItems && Array.from(heatMapItems)?.map((_, i) => <th key={i}>{`Crop Group ${i + 1}`}</th>)
                         }

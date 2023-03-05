@@ -4,10 +4,11 @@ import { Context } from "../Context";
 import { Category, Maps, NutrientsParameter } from "../utils/types";
 
 const Header = () => {
-	const { map, setMap, category, setCategory, parameter, setParameter } =
+	const { map, setMap, category, setCategory, parameter, setParameter, setHeatMapItemsValue } =
 		useContext(Context);
 	const changeMap = (e) => {
 		setMap(e.target.value);
+
 	};
 	const changeCategory = (category) => {
 		setCategory(category);
