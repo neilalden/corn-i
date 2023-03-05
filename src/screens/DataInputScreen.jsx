@@ -49,8 +49,8 @@ const DataInputScreen = () => {
 									_.map((__, y) => {
 										const predData = {
 											value: __,
-											date: Timestamp.fromDate(getDaysAfter(y + 1 * 7, latestDate)),
-											cropGroup: x + 1,
+											date: Timestamp.fromDate(getDaysAfter(x + 1 * 7, latestDate)),
+											cropGroup: y + 1,
 											isPrediction: true
 										}
 										createData(parameter, predData).then(result => {
