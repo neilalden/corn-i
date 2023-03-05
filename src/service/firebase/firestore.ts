@@ -47,6 +47,7 @@ export const readCollection = async (
 				// date: document.data()?.toDate(),
 			};
 			if (data?.date !== undefined) data.date = document.data().date.toDate()
+			if (data?.isPrediction !== undefined) data.isPrediction = document.data().isPrediction
 			values.push(data);
 		});
 		return values;
@@ -68,6 +69,9 @@ export const readCollectionQuery = (
 	let q;
 	if (whereParams && orderByParams && limitParams) {
 		q = query(collectionRef, where(whereParams.arg1, whereParams.arg2, whereParams.arg3), orderBy(orderByParams), limit(limitParams));
+	}
+	else if (orderByParams && limitParams) {
+		q = query(collectionRef, orderBy(orderByParams), limit(limitParams));
 	}
 	else if (whereParams) {
 		q = query(

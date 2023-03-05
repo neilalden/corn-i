@@ -21,17 +21,17 @@ const ContextProvider = (props) => {
 	const [screen, setScreen] = useState(Screens.Dashboard);
 	const [map, setMap] = useState(Maps.MangilagSur);
 	const [category, setCategory] = useState(Category.Nutrients);
-	const [parameter, setParameter] = useState(NutrientsParameter.pH);
+	const [parameter, setParameter] = useState(NutrientsParameter.Nitrogen);
 	const [heatMap, setHeatMap] = useState(undefined);
 	const [heatMapItems, setHeatMapItems] = useState(undefined); // 110 the most, 32 the least
 	const [heatMapItemsValue, setHeatMapItemsValue] = useState(undefined);
 	const [annnotationPosition, setAnnnotationPosition] = useState(0);
 	const [recordedDataDictionary, setRecordedDataDictionary] = useState({})
-	const [predictedDataDictionary, setPredictedDataDictionary] = useState({})
 	const [recordedData, setRecordedData] = useState([]);
 	const [predictedData, setPredictedData] = useState(PREDICTED_DATA);
 	useEffect(() => {
 		(async () => {
+			if (!heatMapItems) return
 			if (objectKeyHasValue(recordedDataDictionary, parameter)) {
 				setRecordedData(recordedDataDictionary[parameter])
 			} else {
@@ -40,12 +40,15 @@ const ContextProvider = (props) => {
 						parameter,
 						readCollectionQuery(
 							collection(firestore, parameter),
-							{ arg1: "date", arg2: ">", arg3: getDaysAgo(4 * 7) } //1 month ago
+							// { arg1: "date", arg2: ">", arg3: Timestamp.fromDate(new Date(Date.parse("Nov 3, 2023"))) } 
+							{ arg1: "date", arg2: ">", arg3: Timestamp.fromDate(new Date()) }
+							// undefined
 							,
-							"date", 100
+							"date", 5 * heatMapItems.length
 						),
 					)
 				);
+				console.log(result)
 				setRecordedDataDictionary(prev => ({
 					...prev,
 					[parameter]: result
@@ -53,10 +56,10 @@ const ContextProvider = (props) => {
 				setRecordedData(result)
 			}
 		})();
-	}, [parameter]);
+	}, [parameter, heatMapItems]);
 	useEffect(() => {
 		if (heatMapItems && heatMapItemsValue?.length > 0) (mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter))
-	}, [heatMapItems, heatMapItemsValue, annnotationPosition])
+	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition])
 
 
 	const State = {
@@ -75,7 +78,9 @@ const ContextProvider = (props) => {
 		annnotationPosition,
 		setAnnnotationPosition,
 		recordedData,
-		predictedData, heatMapItemsValue, setHeatMapItemsValue
+		predictedData,
+		heatMapItemsValue,
+		setHeatMapItemsValue
 	};
 	return <Context.Provider value={State}>{props.children}</Context.Provider>;
 };
@@ -90,3 +95,17 @@ const mapDataToHeatMap = (heatMapItems, data, annotation, parameter) => {
 	}
 }
 export default ContextProvider;
+export const predict = (input) => {
+	return fetch(
+		"http://neilalden.pythonanywhere.com/predict",
+		{
+			// mode: "no-cors",
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(input),
+		}
+	)
+		.then((response) => response?.json())
+		.then((response) => response)
+		.catch(e => console.log(e))
+};

@@ -269,6 +269,12 @@ select,
 	padding: 10px;
 	border: var(--primary) 2px solid;
 }
+path {
+	transition-delay: 100ms;
+	transition-duration: 500ms;
+	transition-property: fill;
+	transition-timing-function: linear;
+}
 rect:hover,
 path:hover {
 	fill: transparent;

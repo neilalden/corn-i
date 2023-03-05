@@ -6,13 +6,11 @@ import { TemperatureParameter } from "../assets/objects/Temperature";
 import { NutrientsParameter } from "../utils/types";
 import { COLOR } from "./colors";
 
-export const getDaysAgo = (days) => {
-	const date = new Date();
+export const getDaysAgo = (days, date = new Date()) => {
 	date.setDate(date.getDate() - days);
 	return date;
 };
-export const getDaysAfter = (days) => {
-	const date = new Date();
+export const getDaysAfter = (days, date = new Date()) => {
 	date.setDate(date.getDate() + days);
 	return date;
 };
@@ -50,9 +48,9 @@ export const objectKeyHasValue = (obj, key) => {
 	return false;
 };
 
-export const sortArrOfObj = (arr, value) => {
+export const sortArrOfObj = (arr, value, order = "desc") => {
 	return arr.sort((a, b) => {
-		return a[value] - b[value];
+		return order === "desc" ? a[value] - b[value] : b[value] - a[value];
 	});
 };
 

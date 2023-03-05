@@ -145,7 +145,7 @@ export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setH
 		const data = {
 			x: item.date.toLocaleDateString("en-US"),
 			y: item.value,
-			extraParams: true
+			isPrediction: item?.isPrediction
 		}
 		temp.push(data);
 		if (temp.length === 4) {
@@ -175,11 +175,7 @@ export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setH
 	return res;
 }
 const dashed = (ctx, value) => {
-	return !!!(ctx?.p1?.raw?.extraParams) ? value : undefined
-
-	return isDateLesser(new Date(), new Date(ctx?.p1?.raw?.x))
-		? value
-		: undefined;
+	return !!(ctx?.p1?.raw?.isPrediction) ? value : undefined
 };
 const getAvg = (arr) => {
 	let avg = 0;
