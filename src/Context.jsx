@@ -1,16 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
-import { COLOR } from "./common/colors";
 import { Category, Maps, NutrientsParameter, Screens } from "./utils/types";
 import {
-	RECORDED_DATA,
-	PREDICTED_DATA,
-	NitrogenValues,
-} from "../src/service/api";
-import {
-	createData,
 	readCollection,
-	readCollectionQuery,
-	readDocument,
 } from "./service/firebase/firestore";
 import { findAreaColor, getDaysAgo, objectKeyHasValue, predictParam } from "./common/utils";
 import { collection, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
@@ -28,29 +19,35 @@ const ContextProvider = (props) => {
 	const [annnotationPosition, setAnnnotationPosition] = useState(0);
 	const [recordedDataDictionary, setRecordedDataDictionary] = useState({})
 	const [recordedData, setRecordedData] = useState([]);
-	const [predictedData, setPredictedData] = useState(PREDICTED_DATA);
 	const [refetch, setRefetch] = useState(false)
 	useEffect(() => {
+
 		(async () => {
 			if (!heatMapItems) return
-			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(parameter + map))) {
-				setRecordedData(recordedDataDictionary[String(parameter + map)])
+			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
+				setRecordedData(recordedDataDictionary[String(category + parameter + map)])
 			} else {
-				const result = (
-					await readCollection(
-						parameter,
-						query(collection(firestore, parameter), where("date", ">", Timestamp.fromDate(new Date())), where("map", "==", map), orderBy("date"), limit(8 * heatMapItems.length))
-					)
-				);
-				setRecordedDataDictionary(prev => ({
-					...prev,
-					[parameter]: result
-				}));
-				setRecordedData(result);
-				setRefetch(false)
+				try {
+
+					const result = (
+						await readCollection(
+							parameter,
+							query(collection(firestore, parameter), where("date", ">", Timestamp.fromDate(new Date())), where("map", "==", map), orderBy("date"), limit(8 * heatMapItems.length))
+						)
+					);
+					setRecordedDataDictionary(prev => ({
+						...prev,
+						[String(category + parameter + map)]: result
+					}));
+					setRecordedData(result);
+					setRefetch(false)
+				} catch (e) {
+					setRecordedData([])
+					console.error(e)
+				}
 			}
 		})();
-	}, [parameter, heatMapItems, refetch, map]);
+	}, [category, parameter, heatMapItems, refetch, map]);
 
 	useEffect(() => {
 		if (heatMapItems && heatMapItemsValue?.length > 0) (mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter))
@@ -73,7 +70,6 @@ const ContextProvider = (props) => {
 		annnotationPosition,
 		setAnnnotationPosition,
 		recordedData,
-		predictedData,
 		heatMapItemsValue,
 		setHeatMapItemsValue, refetch, setRefetch
 	};

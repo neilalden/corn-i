@@ -98,7 +98,7 @@ const DataInputScreen = () => {
 	);
 };
 
-const uploadPrediction = (map, parameter, dataFrame, setDataFrame, setRefetch) => {
+const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefetch) => {
 	const sorted = sortArrOfObj(dataFrame.map(data => ({ ...data, "date": new Date(data.Date || data.date) })), "date", "asc");
 	const latestDate = sorted[0].date
 	const cropGroup = []
@@ -117,7 +117,8 @@ const uploadPrediction = (map, parameter, dataFrame, setDataFrame, setRefetch) =
 	})))
 	for (let i = 0; i < toPredict.length; i++) {
 		for (let j = 0; j < 4; j++) {
-			predict(toPredict[i]).then(res => {
+			try {
+				const res = await predict(toPredict[i])
 				toPredict[i].pop();
 				toPredict[i].unshift(Number((res.prediction?.toFixed(2))))
 				if (res && i === toPredict.length - 1 && j === 3) {
@@ -147,7 +148,9 @@ const uploadPrediction = (map, parameter, dataFrame, setDataFrame, setRefetch) =
 						})
 					})
 				}
-			})
+			} catch (e) {
+				console.error(e)
+			}
 		}
 	}
 }

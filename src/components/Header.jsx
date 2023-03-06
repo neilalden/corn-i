@@ -13,7 +13,7 @@ const Header = () => {
 	const changeCategory = (category) => {
 		setCategory(category);
 		if (category === Category.Nutrients)
-			setParameter(NutrientsParameter.pH);
+			setParameter(NutrientsParameter.Nitrogen);
 		else setParameter(undefined);
 	};
 	const changeParameter = (parameter) => {

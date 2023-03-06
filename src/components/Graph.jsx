@@ -57,7 +57,7 @@ const Graph = () => {
 		sortArrOfObj(recordedData, "cropGroup"), heatMapItems, heatMapItemsValue, setHeatMapItemsValue, parameter) : []
 	return (
 		<div>
-			<code>Yield Predictions</code>
+			<code>Values</code>
 			<div id='graphContainer' className='border-box'>
 
 				<Bar
