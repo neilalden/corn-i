@@ -14,7 +14,7 @@ const DataRecordScreen = () => {
         event.preventDefault();
         const condition = { arg1: "dateString", arg2: "==", arg3: str }
         const value = await deleteMultiple(parameter, condition);
-        if (value === undefined) setRefetch(true)
+        if (value === undefined) setRefetch(true);
     }
     return (
         <div>

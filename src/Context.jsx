@@ -24,8 +24,7 @@ const ContextProvider = (props) => {
 	const [refetch, setRefetch] = useState(false)
 	useEffect(() => {
 		(async () => {
-			console.log(await getOldestPredictionDocument(parameter))
-
+			// console.log(await getOldestPredictionDocument(parameter))
 			if (!heatMapItems) return
 			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
 				setRecordedData(recordedDataDictionary[String(category + parameter + map)])
@@ -59,8 +58,8 @@ const ContextProvider = (props) => {
 	}, [category, parameter, heatMapItems, refetch, map]);
 
 	useEffect(() => {
-		if (heatMapItems && heatMapItemsValue?.length > 0) (mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter))
-	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition])
+		if (heatMapItems && heatMapItemsValue?.length > 0) mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter, recordedData)
+	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition, recordedData])
 
 	const State = {
 		screen,
@@ -83,11 +82,15 @@ const ContextProvider = (props) => {
 	};
 	return <Context.Provider value={State}>{props.children}</Context.Provider>;
 };
-const mapDataToHeatMap = (heatMapItems, data, annotation, parameter) => {
+const mapDataToHeatMap = (heatMapItems, data, annotation, parameter, recordedData) => {
 	try {
 		for (let i = 0; i < heatMapItems?.length; i++) {
 			const item = heatMapItems[i]
-			item?.setAttribute("fill", findAreaColor(parameter, data[i][annotation]?.y))
+			if (recordedData.length === 0) {
+				item?.setAttribute("fill", "#D9D9D9")
+			} else {
+				item?.setAttribute("fill", findAreaColor(parameter, data[i][annotation]?.y))
+			}
 		}
 	} catch (e) {
 		console.error(e)

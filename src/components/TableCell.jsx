@@ -3,7 +3,7 @@ import { Context } from "../Context";
 import { updateDocument } from "../service/firebase/firestore";
 
 const TableCell = ({ data }) => {
-    const { parameter } = useContext(Context)
+    const { parameter, setRefetch } = useContext(Context)
     const [editMode, setEditMode] = useState(false);
     const [value, setValue] = useState(data.value);
     const handleChange = (event) => {
@@ -16,7 +16,10 @@ const TableCell = ({ data }) => {
     }
     const handleSave = async () => {
         const result = await updateDocument(parameter, data.documentId, { value: Number(value) });
-        setEditMode(false)
+        if (result === undefined) {
+            setRefetch(true)
+            setEditMode(false)
+        }
     }
     return (
         <td onDoubleClick={() => setEditMode(true)}>

@@ -152,7 +152,9 @@ export const formatDataToDisplay = (array, heatMapItems, heatMapItemsValue, setH
 			temp = []
 		}
 	}
-	if (!heatMapItemsValue) setHeatMapItemsValue(cropGroups)
+	if (!heatMapItemsValue) {
+		setHeatMapItemsValue(cropGroups)
+	}
 	sortArrOfObj(cropGroups, "date").map((item, i) => {
 		res.push({
 			label: `Crop Group ${i + 1}`,

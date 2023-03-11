@@ -113,7 +113,6 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 			else cropGroup.push([value])
 		}
 	}
-	console.log(cropGroup)
 	const toPredict = (Object.keys(cropGroup[0]).map((_, colIndex) => (cropGroup).map(row => {
 		const value = row[colIndex];
 		if (!isNaN(value) && typeof value !== 'undefined') return Number(value)
