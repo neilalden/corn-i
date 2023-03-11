@@ -107,11 +107,15 @@
 	margin: 0;
 	padding: 0;
 }
-
+html {
+	overflow-y: overlay;
+}
 body {
 	margin: 0;
 	font-family: "Public Sans", sans-serif;
-	margin: 16px 64px;
+	max-width: 1200px;
+	align-self: center;
+	margin: 5vh auto;
 }
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -153,6 +157,7 @@ h1.title {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	max-width: 550px !important;
 	min-width: 500px;
 	width: 30vw;
 	height: 400px;
@@ -163,6 +168,7 @@ h1.title {
 #graphContainer {
 	display: flex;
 	justify-content: center;
+	max-width: 550px !important;
 	min-width: 500px;
 	width: 30vw;
 	height: 400px;
@@ -282,6 +288,9 @@ path:hover {
 }
 .mt-20 {
 	margin-top: 20px;
+}
+.mxwidth-1280 {
+	max-width: 1280px !important;
 }
 .button {
 	cursor: pointer;

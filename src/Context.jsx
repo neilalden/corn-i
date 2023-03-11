@@ -53,7 +53,6 @@ const ContextProvider = (props) => {
 		if (heatMapItems && heatMapItemsValue?.length > 0) (mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter))
 	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition])
 
-
 	const State = {
 		screen,
 		setScreen,

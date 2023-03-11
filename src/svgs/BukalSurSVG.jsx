@@ -2,12 +2,12 @@ import React, { useContext, useEffect, useRef } from "react";
 import { Context } from "../Context";
 
 const BukalSurSVG = () => {
-	const { setHeatMap, setHeatMapItems } = useContext(Context);
+	const { map, setHeatMap, setHeatMapItems } = useContext(Context);
 	const ref = useRef(null);
 	useEffect(() => {
 		setHeatMap(ref.current);
 		setHeatMapItems(ref.current.children);
-	}, [ref, setHeatMap, setHeatMapItems]);
+	}, [ref, map, setHeatMap, setHeatMapItems]);
 	return (
 		<svg
 			ref={ref}

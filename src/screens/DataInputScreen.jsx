@@ -5,7 +5,7 @@ import { createData } from "../service/firebase/firestore";
 import { Context, predict } from "../Context";
 import { Timestamp } from "firebase/firestore";
 import { getDaysAfter, sortArrOfObj } from "../common/utils";
-
+const WEEKS_IN_A_MONTH = 4
 const DataInputScreen = () => {
 	const { parameter, setRefetch, map } = useContext(Context)
 	const [dataFrame, setDataFrame] = useState([])
@@ -102,7 +102,7 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 	const sorted = sortArrOfObj(dataFrame.map(data => ({ ...data, "date": new Date(data.Date || data.date) })), "date", "asc");
 	const latestDate = sorted[0].date
 	const cropGroup = []
-	for (let i = 0; i < 4; i++) {
+	for (let i = 0; i < WEEKS_IN_A_MONTH; i++) {
 		const keys = Object.keys(sorted[i])
 		for (let j = 0; j < keys.length; j++) {
 			const value = Number(sorted[i][keys[j]])
@@ -111,12 +111,13 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 			else cropGroup.push([value])
 		}
 	}
+	console.log(cropGroup)
 	const toPredict = (Object.keys(cropGroup[0]).map((_, colIndex) => (cropGroup).map(row => {
 		const value = row[colIndex];
 		if (!isNaN(value) && typeof value !== 'undefined') return Number(value)
 	})))
 	for (let i = 0; i < toPredict.length; i++) {
-		for (let j = 0; j < 4; j++) {
+		for (let j = 0; j < WEEKS_IN_A_MONTH; j++) {
 			try {
 				const res = await predict(toPredict[i])
 				toPredict[i].pop();

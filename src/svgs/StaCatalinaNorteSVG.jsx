@@ -2,12 +2,12 @@ import React from "react";
 import { Context } from "../Context";
 
 const StaCatalinaNorteSVG = () => {
-	const { setHeatMap, setHeatMapItems } = React.useContext(Context);
+	const { map, setHeatMap, setHeatMapItems } = React.useContext(Context);
 	const ref = React.useRef(null);
 	React.useEffect(() => {
 		setHeatMap(ref.current);
 		setHeatMapItems(ref.current.children);
-	}, [ref, setHeatMap, setHeatMapItems]);
+	}, [ref, map, setHeatMap, setHeatMapItems]);
 	return (
 		<svg
 			ref={ref}

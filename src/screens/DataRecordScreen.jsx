@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { sortArrOfObj } from "../common/utils";
 import Header from "../components/Header";
+import TableCell from "../components/TableCell";
 import { Context } from "../Context";
 
 const DataRecordScreen = () => {
@@ -18,27 +19,31 @@ const DataRecordScreen = () => {
                             cursor: "pointer"
                         }} onClick={() => setAsc(prev => !prev)}>Date {asc ? "▲" : "▼"}</th>
                         {
-                            heatMapItems && Array.from(heatMapItems)?.map((_, i) => <th key={i}>{`Crop Group ${i + 1}`}</th>)
+                            heatMapItems && Array.from([...heatMapItems, "Delete"])?.map((_, i) => i === heatMapItems.length ? <th key={i}>{`Delete`}</th> : <th key={i}>{`Crop Group ${i + 1}`}</th>)
                         }
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map((row, i) => {
+                    {rows.map((row, idx) => {
                         return (
-                            <tr key={i}>{
-                                [row[0], ...row].map((_, i) => {
-                                    if (i === 0) return (
-                                        <td key={i}>
-                                            {
-                                                _.date.toLocaleDateString("en-US")
-                                            }
-                                        </td>)
-                                    return (
-                                        <td key={i}>
-                                            {
-                                                _.value
-                                            }
-                                        </td>)
+                            <tr key={idx} >{
+                                [row[0], ...row, 1].map((data, i) => {
+                                    if (i === 0) {
+                                        return (
+                                            <td>
+                                                {
+                                                    data.date.toLocaleDateString("en-US")
+                                                }
+                                            </td>)
+                                    }
+                                    else if (i === rows[idx].length + 1 && !!!rows[idx][0].isPrediction) {
+                                        return (
+                                            <td key={i}>
+                                                <button style={buttonStyles}><i class="bi bi-trash-fill" style={{ color: "crimson" }}></i></button>
+                                            </td>)
+                                    } else {
+                                        return (<TableCell data={data} key={i} />)
+                                    }
                                 })}</tr>
                         )
                     })}
@@ -47,7 +52,12 @@ const DataRecordScreen = () => {
         </div>
     );
 };
-
+const buttonStyles = {
+    background: "transparent",
+    margin: "auto",
+    width: 25,
+    height: 25,
+}
 const getUniqueDates = (array) => {
     const result = []
     const set = new Set();

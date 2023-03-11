@@ -9,7 +9,7 @@ import {
 	limit,
 	Query,
 	where,
-	WhereFilterOp,
+	WhereFilterOp, updateDoc
 } from "firebase/firestore";
 import { firestore } from "./config";
 
@@ -29,6 +29,15 @@ export const createData = async (
 		console.error("Error adding document: ", e);
 	}
 };
+
+export const updateDocument = async (collectionName: string, docId: string, data: any) => {
+	try {
+		const result = await updateDoc(doc(firestore, collectionName, docId), data);
+		return result
+	} catch (error) {
+		console.error(error)
+	}
+}
 
 export const readCollection = async (
 	collectionName: string,
