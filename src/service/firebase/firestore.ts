@@ -9,8 +9,10 @@ import {
 	limit,
 	Query,
 	where,
-	WhereFilterOp, updateDoc
+	updateDoc,
+	deleteDoc,
 } from "firebase/firestore";
+import { whereQueryType } from "../../utils/types";
 import { firestore } from "./config";
 
 export const createData = async (
@@ -67,11 +69,7 @@ export const readCollection = async (
 
 export const readCollectionQuery = (
 	collectionRef: Query<unknown>,
-	whereParams?: {
-		arg1: string;
-		arg2: WhereFilterOp;
-		arg3: string | number | boolean;
-	},
+	whereParams?: whereQueryType,
 	orderByParams?: string,
 	limitParams?: number,
 ) => {
@@ -110,5 +108,42 @@ export const readDocument = async (collectionName: string, docId: string) => {
 		}
 	} catch (e) {
 		console.error("Error fetching document: ", e);
+	}
+};
+
+export const deleteMultiple = async (collectionName: string, whereParams: whereQueryType) => {
+	const q = query(collection(firestore, collectionName), where(whereParams.arg1, whereParams.arg2, whereParams.arg3))
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.forEach(async (document) => {
+		return await deleteDoc(doc(firestore, collectionName, document.id))
+	})
+}
+
+export const getOldestDocument = (collectionName: string) => {
+	try {
+		const q = query(collection(firestore, collectionName), orderBy("date"), limit(1))
+		return getDocs(q).then((snapshot) => {
+			let data = {}
+			snapshot.forEach((document) => {
+				data = (document.data())
+			})
+			return data
+		})
+	} catch (error) {
+		console.error(error)
+	}
+};
+export const getOldestPredictionDocument = (collectionName: string) => {
+	try {
+		const q = query(collection(firestore, collectionName), where("isPrediction", "==", true), orderBy("date"), limit(1))
+		return getDocs(q).then((snapshot) => {
+			let data = {}
+			snapshot.forEach((document) => {
+				data = (document.data())
+			})
+			return data
+		})
+	} catch (error) {
+		console.error(error)
 	}
 };

@@ -3,12 +3,19 @@ import { sortArrOfObj } from "../common/utils";
 import Header from "../components/Header";
 import TableCell from "../components/TableCell";
 import { Context } from "../Context";
+import { deleteMultiple } from "../service/firebase/firestore";
 
 const DataRecordScreen = () => {
     const [asc, setAsc] = useState(false)
-    const { recordedData, heatMapItems } = useContext(Context);
+    const { parameter, recordedData, heatMapItems, setRefetch } = useContext(Context);
     const sorted = sortArrOfObj(recordedData, "date", asc ? "asc" : "desc");
     const rows = getRows(sorted, heatMapItems?.length);
+    const handleDeleteRow = async (event, str) => {
+        event.preventDefault();
+        const condition = { arg1: "dateString", arg2: "==", arg3: str }
+        const value = await deleteMultiple(parameter, condition);
+        if (value === undefined) setRefetch(true)
+    }
     return (
         <div>
             <Header />
@@ -26,20 +33,17 @@ const DataRecordScreen = () => {
                 <tbody>
                     {rows.map((row, idx) => {
                         return (
-                            <tr key={idx} >{
+                            <tr key={idx} className={row[0].isPrediction ? "predicted-row" : ""}>{
                                 [row[0], ...row, 1].map((data, i) => {
                                     if (i === 0) {
-                                        return (
-                                            <td>
-                                                {
-                                                    data.date.toLocaleDateString("en-US")
-                                                }
-                                            </td>)
+                                        return (<td key={i} >{data.dateString}</td>)
                                     }
-                                    else if (i === rows[idx].length + 1 && !!!rows[idx][0].isPrediction) {
+                                    else if (i === rows[idx].length + 1
+                                        // && !!!rows[idx][0].isPrediction
+                                    ) {
                                         return (
-                                            <td key={i}>
-                                                <button style={buttonStyles}><i class="bi bi-trash-fill" style={{ color: "crimson" }}></i></button>
+                                            <td key={i} >
+                                                <button style={buttonStyles} onClick={(event) => handleDeleteRow(event, row[0].dateString)}><i class="bi bi-trash-fill" style={{ color: "crimson" }}></i></button>
                                             </td>)
                                     } else {
                                         return (<TableCell data={data} key={i} />)

@@ -357,7 +357,6 @@ table {
 	font-family: arial, sans-serif;
 	width: 100%;
 	margin-top: 48px;
-	border-radius: var(--border-radius) !important;
 }
 
 td,
@@ -369,7 +368,6 @@ td {
 	font-weight: 100;
 }
 thead:first-child {
-	border-radius: var(--border-radius) !important;
 	background-color: var(--primary);
 }
 tr:nth-child(even) {
@@ -377,4 +375,8 @@ tr:nth-child(even) {
 }
 .h-100px {
 	height: 300px !important;
+}
+.predicted-row {
+	outline: dashed #dddddd;
+	/* background-color: red !important; */
 }

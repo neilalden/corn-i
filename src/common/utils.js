@@ -51,6 +51,13 @@ export const objectKeyHasValue = (obj, key) => {
 };
 
 export const sortArrOfObj = (arr, value, order = "desc") => {
+	if (value === "date" || value === "Date") {
+		return arr.sort((a, b) => {
+			return order === "desc"
+				? new Date(a[value]) - new Date(b[value])
+				: new Date(b[value]) - new Date(a[value]);
+		});
+	}
 	return arr.sort((a, b) => {
 		return order === "desc" ? a[value] - b[value] : b[value] - a[value];
 	});

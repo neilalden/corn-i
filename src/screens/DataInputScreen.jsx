@@ -13,13 +13,15 @@ const DataInputScreen = () => {
 	const handleUploadData = (event) => {
 		event.preventDefault();
 		for (const [index, row] of dataFrame.entries()) {
-			const date = row["Date"] || row["date"];
+			const dateKey = row["Date"] || row["date"];
 			const rowKeys = Object.keys(row)
 			for (const key of rowKeys) {
 				if (key.toLowerCase() === "date") continue;
+				const date = new Date(dateKey)
 				const data = {
 					value: Number(row[key]),
-					date: Timestamp.fromDate(new Date(date)),
+					date: Timestamp.fromDate(date),
+					dateString: date.toLocaleDateString("en-US"),
 					cropGroup: Number(key),
 					map: map
 				}
@@ -129,11 +131,13 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 						const row = toPredict[ii];
 						for (let jj = 0; jj < row.length; jj++) {
 							const cellValue = row[jj];
+							const date = getDaysAfter((jj + 1) * 7, new Date(latestDate))
 							const data = {
 								isPrediction: true,
 								value: Number(cellValue),
 								cropGroup: cropGroup,
-								date: Timestamp.fromDate(getDaysAfter((jj + 1) * 7, new Date(latestDate))),
+								date: Timestamp.fromDate(date),
+								dateString: date.toLocaleDateString("en-US"),
 								map: map
 							}
 							temp.push(data)

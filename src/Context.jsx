@@ -1,9 +1,11 @@
 import React, { useState, createContext, useEffect } from "react";
 import { Category, Maps, NutrientsParameter, Screens } from "./utils/types";
 import {
+	getOldestDocument,
+	getOldestPredictionDocument,
 	readCollection,
 } from "./service/firebase/firestore";
-import { findAreaColor, getDaysAgo, objectKeyHasValue, predictParam } from "./common/utils";
+import { findAreaColor, getDaysAgo, objectKeyHasValue, predictParam, sortArrOfObj } from "./common/utils";
 import { collection, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { firestore } from "./service/firebase/config";
 
@@ -21,19 +23,26 @@ const ContextProvider = (props) => {
 	const [recordedData, setRecordedData] = useState([]);
 	const [refetch, setRefetch] = useState(false)
 	useEffect(() => {
-
 		(async () => {
+			console.log(await getOldestPredictionDocument(parameter))
+
 			if (!heatMapItems) return
 			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
 				setRecordedData(recordedDataDictionary[String(category + parameter + map)])
 			} else {
 				try {
 
-					const result = (
+					const result = sortArrOfObj(
 						await readCollection(
 							parameter,
-							query(collection(firestore, parameter), where("date", ">", Timestamp.fromDate(new Date())), where("map", "==", map), orderBy("date"), limit(8 * heatMapItems.length))
-						)
+							query(collection(firestore, parameter),
+								// where("date", ">", Timestamp.fromDate(new Date())), 
+								where("map", "==", map),
+								orderBy("date", "desc"),
+								limit(8 * heatMapItems.length))
+						),
+						"date",
+						"desc"
 					);
 					setRecordedDataDictionary(prev => ({
 						...prev,
