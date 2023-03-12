@@ -121,7 +121,7 @@ const ChartComponent = (props) => {
 					<code>Play</code>
 				</div>
 			</div>
-			<div className='border-box' id='chartContainer'>
+			<div className='graph' id='chartContainer'>
 				<Line
 					className="h-100px"
 					data={data}

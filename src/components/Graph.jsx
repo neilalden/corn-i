@@ -58,8 +58,7 @@ const Graph = () => {
 	return (
 		<div>
 			<code>Values</code>
-			<div id='graphContainer' className='border-box'>
-
+			<div id='graphContainer' className='graph'>
 				<Bar
 					data={{
 						labels: data.map((_) => _.label),

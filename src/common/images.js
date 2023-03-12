@@ -30,4 +30,5 @@ export const Images = {
 	ic_humidity_green_outline: require("../assets/icons/ic_humidity_green_outline.png"),
 	ic_rainfall_gray_fill: require("../assets/icons/ic_rainfall_gray_fill.png"),
 	ic_rainfall_green_outline: require("../assets/icons/ic_rainfall_green_outline.png"),
+	ic_logo: require("../assets/icons/ic_logo.png"),
 };

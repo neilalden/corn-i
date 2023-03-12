@@ -1,13 +1,46 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Images } from "../common/images";
 import { Context } from "../Context";
 import { Category, Maps, NutrientsParameter } from "../utils/types";
 
 const Header = () => {
-	const { map, setMap, category, setCategory, parameter, setParameter, setHeatMapItemsValue } =
-		useContext(Context);
+	const {
+		map,
+		setMap,
+		category,
+		setCategory,
+		parameter,
+		setParameter,
+		dateFilterOptions,
+		setDateFilterOptions,
+		recordedDataDictionary,
+		setRecordedData,
+		heatMapItems
+	} = useContext(Context);
+	const [dateFilterString, setDateFilterString] = useState("")
 	const changeMap = (e) => {
 		setMap(e.target.value);
+		setDateFilterOptions([]);
+	};
+	const changeDate = (e) => {
+		// setMap(e.target.value);
+		const filter = e.target.value
+		setDateFilterString(filter);
+		const collection = recordedDataDictionary[String(category + parameter + map)]
+		const length = 8 * heatMapItems.length
+		const array = [];
+		let i = 0;
+		while (i < collection.length && array.length < length) {
+			const data = collection[i]
+			const d = new Date(filter)
+			if (data.date >= d.setDate(d.getDate() - 7)) {
+				array.push(data)
+			}
+			i++
+		}
+
+		setRecordedData(array)
 
 	};
 	const changeCategory = (category) => {
@@ -18,9 +51,10 @@ const Header = () => {
 	};
 	const changeParameter = (parameter) => {
 		setParameter(parameter);
+		setDateFilterOptions([])
 	};
 	return (
-		<div className='flex-row justify-content-between'>
+		<div className='flex-row justify-content-between' id="header">
 			<div>
 				<h1>Baranggay</h1>
 				<select id='mapSelect' onChange={changeMap} value={map}>
@@ -35,6 +69,16 @@ const Header = () => {
 					<option value={Maps.PahingaNorte}>{Maps.PahingaNorte}</option>
 					<option value={Maps.SanAndres}>{Maps.SanAndres}</option>
 					<option value={Maps.StaCatalinaNorte}>{Maps.StaCatalinaNorte}</option>
+				</select>
+			</div>
+			<div>
+				<h1>Salain ng Petsa</h1>
+				<select id='dateSelect' onChange={changeDate} value={dateFilterString}>
+					{
+						dateFilterOptions && dateFilterOptions.map((date, index) => {
+							return (<option key={index} value={date.value}>{date.key}</option>)
+						})
+					}
 				</select>
 			</div>
 			<div>

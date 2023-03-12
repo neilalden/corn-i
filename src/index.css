@@ -1,5 +1,5 @@
 :root {
-	--border-radius: 6px;
+	--border-radius: 8px;
 	--primary: #2db92d;
 	/* common */
 	--black: #000000;
@@ -102,7 +102,7 @@
 	--inputError: #ef4444;
 }
 * {
-	font-family: "Public Sans", sans-serif;
+	font-family: "Poppins", sans-serif;
 	font-weight: 600;
 	margin: 0;
 	padding: 0;
@@ -151,7 +151,7 @@ h1.title {
 	margin: 0;
 	font-size: 32px;
 	font-weight: bolder !important;
-	color: var(--primary);
+	color: var(--white);
 }
 #maskContainer {
 	display: flex;
@@ -227,11 +227,15 @@ h1.title {
 	justify-content: flex-end;
 }
 nav {
-	margin-bottom: 48px;
+	margin-bottom: 24px;
+}
+.nav-button-container {
+	margin-top: 10px;
+	color: var(--white);
 }
 .nav-link {
-	color: var(--gray500);
-	cursor: pointer;
+	color: var(--white);
+	cursor: pointer !important;
 	font-size: 18;
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
@@ -239,17 +243,18 @@ nav {
 }
 .nav-link-active {
 	text-decoration: none;
-	color: var(--primary);
-	cursor: pointer;
+	color: var(--yellow400);
+	cursor: pointer !important;
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none; /* Standard syntax */
+	font-weight: 900;
 }
 .nav-image {
 	width: 50px;
 	height: 50px;
 	margin: 8px 32px 8px 0;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 .indication {
 	margin: 16px 0;
@@ -275,6 +280,11 @@ select,
 	padding: 10px;
 	border: var(--primary) 2px solid;
 }
+.graph {
+	padding: 10px;
+	background-color: var(--white);
+	border-radius: var(--border-radius);
+}
 path {
 	transition-delay: 100ms;
 	transition-duration: 500ms;
@@ -284,7 +294,7 @@ path {
 rect:hover,
 path:hover {
 	fill: transparent;
-	cursor: pointer;
+	cursor: pointer !important;
 }
 .mt-20 {
 	margin-top: 20px;
@@ -293,13 +303,13 @@ path:hover {
 	max-width: 1280px !important;
 }
 .button {
-	cursor: pointer;
-	background: var(--primary);
+	cursor: pointer !important;
+	background: var(--white);
 	border: var(--primary) 2px solid;
 	border-radius: var(--border-radius);
 	transition-duration: 200ms;
 	padding: 2.5px 5px;
-	color: var(--white);
+	color: var(--primary);
 	-webkit-user-select: none; /* Safari */
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none; /* Standard syntax */
@@ -307,7 +317,8 @@ path:hover {
 }
 .button:hover {
 	background: transparent;
-	color: var(--primary);
+	color: var(--white);
+	border: var(--white) 2px solid;
 }
 .input_container {
 	border: 1px solid #d9d9d9;
@@ -338,14 +349,14 @@ input[type="reset"] {
 	border: none;
 	padding: 0;
 	font: inherit;
-	cursor: pointer;
+	cursor: pointer !important;
 	outline: inherit;
 }
 button {
 	background-color: var(--primary);
 	margin-top: 16px;
 	border-radius: var(--border-radius);
-	cursor: pointer;
+	cursor: pointer !important;
 	width: 100%;
 }
 button h3 {
@@ -377,6 +388,28 @@ tr:nth-child(even) {
 	height: 300px !important;
 }
 .predicted-row {
-	outline: dashed #dddddd;
+	outline: dashed var(--yellow400);
 	/* background-color: red !important; */
+}
+.logo {
+	height: 100px !important;
+	width: 100px !important;
+}
+#header {
+	border: 2px solid var(--primary);
+	padding: 10px;
+	border-radius: var(--border-radius);
+	margin-bottom: 10px;
+}
+#nav {
+	background-color: var(--primary);
+	padding: 10px;
+	border-radius: var(--border-radius);
+	margin-bottom: 10px;
+}
+#dashboard {
+	background-color: var(--primary);
+	padding: 10px;
+	border-radius: var(--border-radius);
+	color: var(--white);
 }

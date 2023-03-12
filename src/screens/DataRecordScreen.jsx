@@ -43,7 +43,7 @@ const DataRecordScreen = () => {
                                     ) {
                                         return (
                                             <td key={i} >
-                                                <button style={buttonStyles} onClick={(event) => handleDeleteRow(event, row[0].dateString)}><i class="bi bi-trash-fill" style={{ color: "crimson" }}></i></button>
+                                                <button style={buttonStyles} onClick={(event) => handleDeleteRow(event, row[0].dateString)}><i className="bi bi-trash-fill" style={{ color: "crimson" }}></i></button>
                                             </td>)
                                     } else {
                                         return (<TableCell data={data} key={i} />)

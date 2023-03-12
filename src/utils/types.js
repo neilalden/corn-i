@@ -32,3 +32,17 @@ export const NutrientsParameter = {
 	Humidity: "Humidity",
 	Rainfall: "Rainfall",
 };
+export const Months = [
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
+];

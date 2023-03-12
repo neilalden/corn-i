@@ -8,12 +8,15 @@ const DashboardScreen = () => {
 	return (
 		<React.Fragment>
 			<Header />
-			<div className='flex-row justify-content-between'>
-				<Map />
-				&nbsp;&nbsp;&nbsp;&nbsp;
-				<Graph />
+			<div id="dashboard">
+
+				<div className='flex-row justify-content-between'>
+					<Map />
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<Graph />
+				</div>
+				<Chart />
 			</div>
-			<Chart />
 		</React.Fragment>
 	);
 };

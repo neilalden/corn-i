@@ -1,23 +1,38 @@
 import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import Papa from "papaparse";
-import { createData } from "../service/firebase/firestore";
+import { createData, deleteMultiple } from "../service/firebase/firestore";
 import { Context, predict } from "../Context";
 import { Timestamp } from "firebase/firestore";
 import { getDaysAfter, sortArrOfObj } from "../common/utils";
+import { toast } from "react-toastify";
+import ProgressBar from "customizable-progress-bar";
+
 const WEEKS_IN_A_MONTH = 4
 const DataInputScreen = () => {
-	const { parameter, setRefetch, map } = useContext(Context)
+	const { parameter, setRefetch, map, oldestPrediction, heatMapItems } = useContext(Context)
 	const [dataFrame, setDataFrame] = useState([])
+	const [uploadingData, setUploadingData] = useState(false);
+	const [uploadingPred, setUploadingPred] = useState(false);
+	const [uploadDataProgress, setUploadDataProgress] = useState(0)
+	const [uploadPredProgress, setUploadPredProgress] = useState(0)
+	const [uploadingDataMax, setUploadingDataMax] = useState(0);
+	const [uploadingPredMax, setUploadingPredMax] = useState(heatMapItems.length * 4);
 	const commonConfig = { delimiter: "," };
-	const handleUploadData = (event) => {
+	const handleUploadData = async (event) => {
 		event.preventDefault();
+		let oldestDataDate;
+		setUploadingData(true)
+		setUploadingDataMax(dataFrame.flatMap(_ => _).length)
 		for (const [index, row] of dataFrame.entries()) {
 			const dateKey = row["Date"] || row["date"];
 			const rowKeys = Object.keys(row)
 			for (const key of rowKeys) {
 				if (key.toLowerCase() === "date") continue;
-				const date = new Date(dateKey)
+				const date = new Date(dateKey);
+				if (oldestDataDate === undefined || oldestDataDate < date) {
+					oldestDataDate = date
+				}
 				const data = {
 					value: Number(row[key]),
 					date: Timestamp.fromDate(date),
@@ -26,12 +41,32 @@ const DataInputScreen = () => {
 					map: map
 				}
 				createData(parameter, data).then(result => {
+					setUploadDataProgress(prev => prev += 1)
 					if (result && index === dataFrame.length - 2 && dataFrame.length > 0) {
+						setUploadingData(false)
 					}
 				})
 			}
 		}
-		uploadPrediction(map, parameter, dataFrame, setDataFrame, setRefetch)
+		console.log(oldestDataDate, (oldestPrediction.date))
+		if (oldestDataDate < oldestPrediction.date.toDate()) {
+			toast.success('Upload success!', {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
+		} else {
+			setUploadingPred(true)
+			const condition = { arg1: "isPrediction", arg2: "==", arg3: true }
+			const value = await deleteMultiple(parameter, condition);
+			if (value === undefined)
+				uploadPrediction(map, parameter, dataFrame, setDataFrame, setRefetch, setUploadingPred, setUploadPredProgress)
+		}
 	}
 	const handleOpenFile = (event) => {
 		try {
@@ -59,6 +94,47 @@ const DataInputScreen = () => {
 	return (
 		<div>
 			<Header />
+			{uploadingData ?
+				<div style={{ marginBottom: 10 }}>
+					<h3>Data upload</h3>
+					<ProgressBar
+						slideIn={true} //Possible values true, false
+						barHeight={30} //Possible value any number
+						labelSize={"medium"} //Possible any number or small, medium, large, x-large, xx-large ...
+						activeBackColor={"#2db92d"} //Possible value any string (color code)
+						disabledBackColor={"#cccccc"} //Possible value any string (color code)
+						striped={true} //Possible values true, false
+						animated={true} //Possible values true, false
+						labelColor={"#ffffff"} //Possible value any string (color code)
+						borderRadius={8} //Possible value any number
+						minValue={0} //Possible value any number
+						currentValue={uploadDataProgress} //Possible value any number
+						maxValue={uploadingDataMax} //Possible value any number
+						showLabel={true} //Possible values true, false
+					/>
+				</div>
+				: null}
+
+			{uploadingPred ?
+				<div style={{ marginBottom: 10 }}>
+					<h3>Generating prediction</h3>
+					<ProgressBar
+						slideIn={true} //Possible values true, false
+						barHeight={30} //Possible value any number
+						labelSize={"medium"} //Possible any number or small, medium, large, x-large, xx-large ...
+						activeBackColor={"#fbbf24"} //Possible value any string (color code)
+						disabledBackColor={"#cccccc"} //Possible value any string (color code)
+						striped={true} //Possible values true, false
+						animated={true} //Possible values true, false
+						labelColor={"#ffffff"} //Possible value any string (color code)
+						borderRadius={8} //Possible value any number
+						minValue={0} //Possible value any number
+						currentValue={uploadPredProgress} //Possible value any number
+						maxValue={uploadingPredMax} //Possible value any number
+						showLabel={true} //Possible values true, false
+					/>
+				</div>
+				: null}
 			<main>
 				<form>
 					<div className="input_container">
@@ -100,7 +176,7 @@ const DataInputScreen = () => {
 	);
 };
 
-const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefetch) => {
+const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefetch, setUploadingPred, setUploadPredProgress) => {
 	const sorted = sortArrOfObj(dataFrame.map(data => ({ ...data, "date": new Date(data.Date || data.date) })), "date", "asc");
 	const latestDate = sorted[0].date
 	const cropGroup = []
@@ -144,10 +220,21 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 					}
 					temp.map((tempData, tempIdx) => {
 						createData(parameter, tempData).then(res => {
+							setUploadPredProgress(prev => prev += 1)
 							if (res && tempIdx === temp.length - 1) {
-								alert("success!")
+								toast.success('Upload success!', {
+									position: "top-center",
+									autoClose: 5000,
+									hideProgressBar: false,
+									closeOnClick: true,
+									pauseOnHover: true,
+									draggable: true,
+									progress: undefined,
+									theme: "light",
+								});
 								setDataFrame([]);
 								setRefetch(true)
+								setUploadingPred(false)
 							}
 						})
 					})

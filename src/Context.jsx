@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, createContext, useEffect } from "react";
-import { Category, Maps, NutrientsParameter, Screens } from "./utils/types";
+import { Category, Maps, NutrientsParameter, Screens, Months } from "./utils/types";
 import {
 	getOldestDocument,
 	getOldestPredictionDocument,
@@ -21,24 +22,27 @@ const ContextProvider = (props) => {
 	const [annnotationPosition, setAnnnotationPosition] = useState(0);
 	const [recordedDataDictionary, setRecordedDataDictionary] = useState({})
 	const [recordedData, setRecordedData] = useState([]);
-	const [refetch, setRefetch] = useState(false)
+	const [refetch, setRefetch] = useState(false);
+	const [dateFilterOptions, setDateFilterOptions] = useState([]);
+	const [dateToFetch, setDateToFetch] = useState(new Date())
+	const [oldestPrediction, setOldestPrediction] = useState(undefined)
 	useEffect(() => {
 		(async () => {
-			// console.log(await getOldestPredictionDocument(parameter))
+			setOldestPrediction(await getOldestPredictionDocument(parameter))
 			if (!heatMapItems) return
 			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
-				setRecordedData(recordedDataDictionary[String(category + parameter + map)])
+				setRecordedData(recordedDataDictionary[String(category + parameter + map)].slice(-(8 * heatMapItems.length)))
 			} else {
 				try {
-
 					const result = sortArrOfObj(
 						await readCollection(
 							parameter,
 							query(collection(firestore, parameter),
-								// where("date", ">", Timestamp.fromDate(new Date())), 
+								where("date", ">", Timestamp.fromDate(dateToFetch)),
 								where("map", "==", map),
 								orderBy("date", "desc"),
-								limit(8 * heatMapItems.length))
+								// limit(8 * heatMapItems.length)
+							)
 						),
 						"date",
 						"desc"
@@ -47,7 +51,7 @@ const ContextProvider = (props) => {
 						...prev,
 						[String(category + parameter + map)]: result
 					}));
-					setRecordedData(result);
+					setRecordedData(result.slice(-(8 * heatMapItems.length)));
 					setRefetch(false)
 				} catch (e) {
 					setRecordedData([])
@@ -59,7 +63,12 @@ const ContextProvider = (props) => {
 
 	useEffect(() => {
 		if (heatMapItems && heatMapItemsValue?.length > 0) mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter, recordedData)
-	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition, recordedData])
+	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition, recordedData]);
+
+	useEffect(() => {
+		if (dateFilterOptions?.length > 0) return;
+		setDateFilterOptions(getUniqueMonthsAndYears(recordedDataDictionary[String(category + parameter + map)])?.reverse())
+	}, [recordedData])
 
 	const State = {
 		screen,
@@ -78,7 +87,16 @@ const ContextProvider = (props) => {
 		setAnnnotationPosition,
 		recordedData,
 		heatMapItemsValue,
-		setHeatMapItemsValue, refetch, setRefetch
+		setHeatMapItemsValue,
+		refetch,
+		setRefetch,
+		dateFilterOptions,
+		setDateFilterOptions,
+		dateToFetch,
+		setDateToFetch,
+		setRecordedData,
+		recordedDataDictionary,
+		oldestPrediction
 	};
 	return <Context.Provider value={State}>{props.children}</Context.Provider>;
 };
@@ -111,3 +129,15 @@ export const predict = (input) => {
 		.then((response) => response)
 		.catch(e => console.error(e))
 };
+export const getUniqueMonthsAndYears = (array) => {
+	if (!Array.isArray(array)) return;
+	const map = new Map();
+	for (const item of array) {
+		const month = item.date.getMonth()
+		const year = item.date.getFullYear()
+		const str = `${Months[month]}, ${year}`
+		if (item.isPrediction) break;
+		if (!map.has(str)) map.set(str, item.date)
+	}
+	return Array.from(map).map(([key, value]) => ({ key, value }))
+}
