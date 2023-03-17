@@ -48,8 +48,7 @@ const DataInputScreen = () => {
 				})
 			}
 		}
-		console.log(oldestDataDate, (oldestPrediction.date))
-		if (oldestDataDate < oldestPrediction.date.toDate()) {
+		if (oldestDataDate < oldestPrediction?.date?.toDate()) {
 			toast.success('Upload success!', {
 				position: "top-center",
 				autoClose: 5000,
@@ -196,7 +195,7 @@ const uploadPrediction = async (map, parameter, dataFrame, setDataFrame, setRefe
 	for (let i = 0; i < toPredict.length; i++) {
 		for (let j = 0; j < WEEKS_IN_A_MONTH; j++) {
 			try {
-				const res = await predict(toPredict[i])
+				const res = await predict(toPredict[i], parameter);
 				toPredict[i].pop();
 				toPredict[i].unshift(Number((res.prediction?.toFixed(2))))
 				if (res && i === toPredict.length - 1 && j === 3) {

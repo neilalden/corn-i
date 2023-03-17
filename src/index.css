@@ -241,6 +241,9 @@ nav {
 	-ms-user-select: none; /* IE 10 and IE 11 */
 	user-select: none; /* Standard syntax */
 }
+.nav-link:hover {
+	text-decoration: underline;
+}
 .nav-link-active {
 	text-decoration: none;
 	color: var(--yellow400);
@@ -290,11 +293,30 @@ path {
 	transition-duration: 500ms;
 	transition-property: fill;
 	transition-timing-function: linear;
+	position: relative;
+	display: inline-block;
 }
+.tooltiptext {
+	visibility: hidden;
+	width: 120px;
+	background-color: black;
+	color: #fff;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 0;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 100;
+}
+
 rect:hover,
 path:hover {
 	fill: transparent;
 	cursor: pointer !important;
+}
+path:hover .tooltiptext {
+	visibility: visible;
 }
 .mt-20 {
 	margin-top: 20px;

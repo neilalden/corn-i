@@ -9,6 +9,7 @@ import {
 import { findAreaColor, getDaysAgo, objectKeyHasValue, predictParam, sortArrOfObj } from "./common/utils";
 import { collection, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { firestore } from "./service/firebase/config";
+import { formatDataToDisplay } from "./components/Chart";
 
 export const Context = createContext("Default Value");
 const ContextProvider = (props) => {
@@ -24,12 +25,14 @@ const ContextProvider = (props) => {
 	const [recordedData, setRecordedData] = useState([]);
 	const [refetch, setRefetch] = useState(false);
 	const [dateFilterOptions, setDateFilterOptions] = useState([]);
-	const [dateToFetch, setDateToFetch] = useState(new Date())
+	const [dateToFetch, setDateToFetch] = useState(undefined)
 	const [oldestPrediction, setOldestPrediction] = useState(undefined)
 	useEffect(() => {
 		(async () => {
 			setOldestPrediction(await getOldestPredictionDocument(parameter))
 			if (!heatMapItems) return
+			const oldest = await getOldestDocument(parameter)
+			setDateToFetch(oldest?.date.toDate() ?? new Date())
 			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
 				setRecordedData(recordedDataDictionary[String(category + parameter + map)].slice(-(8 * heatMapItems.length)))
 			} else {
@@ -38,7 +41,7 @@ const ContextProvider = (props) => {
 						await readCollection(
 							parameter,
 							query(collection(firestore, parameter),
-								where("date", ">", Timestamp.fromDate(dateToFetch)),
+								where("date", ">=", Timestamp.fromDate(oldest?.date.toDate() ?? new Date())),
 								where("map", "==", map),
 								orderBy("date", "desc"),
 								// limit(8 * heatMapItems.length)
@@ -51,7 +54,7 @@ const ContextProvider = (props) => {
 						...prev,
 						[String(category + parameter + map)]: result
 					}));
-					setRecordedData(result.slice(-(8 * heatMapItems.length)));
+					setRecordedData(result?.slice(-(8 * heatMapItems.length)));
 					setRefetch(false)
 				} catch (e) {
 					setRecordedData([])
@@ -60,16 +63,34 @@ const ContextProvider = (props) => {
 			}
 		})();
 	}, [category, parameter, heatMapItems, refetch, map]);
-
 	useEffect(() => {
-		if (heatMapItems && heatMapItemsValue?.length > 0) mapDataToHeatMap(heatMapItems, heatMapItemsValue, annnotationPosition, parameter, recordedData)
-	}, [parameter, heatMapItems, heatMapItemsValue, annnotationPosition, recordedData]);
+		const cropGroups = [];
+		if (recordedData.length > 0) {
+			let temp = []
+			for (let i = 0; i < recordedData.length; i++) {
+				const item = recordedData[i];
+				const data = {
+					x: item.date.toLocaleDateString("en-US"),
+					y: item.value,
+					isPrediction: item?.isPrediction
+				}
+				temp.push(data);
+				if (temp.length === 8) {
+					cropGroups.push(temp);
+					temp = []
+				}
+			}
+		}
+
+		const value = cropGroups
+
+		if (heatMapItems) mapDataToHeatMap(heatMapItems, value, annnotationPosition, parameter, recordedData)
+	}, [parameter, heatMapItems, annnotationPosition, recordedData]);
 
 	useEffect(() => {
 		if (dateFilterOptions?.length > 0) return;
 		setDateFilterOptions(getUniqueMonthsAndYears(recordedDataDictionary[String(category + parameter + map)])?.reverse())
 	}, [recordedData])
-
 	const State = {
 		screen,
 		setScreen,
@@ -107,7 +128,8 @@ const mapDataToHeatMap = (heatMapItems, data, annotation, parameter, recordedDat
 			if (recordedData.length === 0) {
 				item?.setAttribute("fill", "#D9D9D9")
 			} else {
-				item?.setAttribute("fill", findAreaColor(parameter, data[i][annotation]?.y))
+				const color = findAreaColor(parameter, data[i][annotation]?.y);
+				item?.setAttribute("fill", color)
 			}
 		}
 	} catch (e) {
@@ -115,9 +137,9 @@ const mapDataToHeatMap = (heatMapItems, data, annotation, parameter, recordedDat
 	}
 }
 export default ContextProvider;
-export const predict = (input) => {
+export const predict = (input, parameter) => {
 	return fetch(
-		"http://neilalden.pythonanywhere.com/predict",
+		`http://neilalden.pythonanywhere.com/predict/${parameter?.toLowerCase()}`,
 		{
 			// mode: "no-cors",
 			method: "POST",

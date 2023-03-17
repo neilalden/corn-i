@@ -123,9 +123,9 @@ export const getOldestDocument = (collectionName: string) => {
 	try {
 		const q = query(collection(firestore, collectionName), orderBy("date"), limit(1))
 		return getDocs(q).then((snapshot) => {
-			let data = {}
+			let data: any = undefined
 			snapshot.forEach((document) => {
-				data = (document.data())
+				if (data === undefined && Object.keys(document.data()).length !== 0) data = document.data();
 			})
 			return data
 		})
