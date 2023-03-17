@@ -111,17 +111,21 @@ export const readDocument = async (collectionName: string, docId: string) => {
 	}
 };
 
-export const deleteMultiple = async (collectionName: string, whereParams: whereQueryType) => {
-	const q = query(collection(firestore, collectionName), where(whereParams.arg1, whereParams.arg2, whereParams.arg3))
+export const deleteMultiple = async (collectionName: string, map: string, setUploadingPredMax: React.Dispatch<React.SetStateAction<number>>, setUploadPredProgress: React.Dispatch<React.SetStateAction<number>>) => {
+
+	const q = query(collection(firestore, collectionName), where("map", "==", map), where("isPrediction", "==", true))
 	const querySnapshot = await getDocs(q);
+	setUploadingPredMax(prev => prev += querySnapshot.size)
 	return querySnapshot.forEach(async (document) => {
-		return await deleteDoc(doc(firestore, collectionName, document.id))
+		const del = await deleteDoc(doc(firestore, collectionName, document.id))
+		if (del === undefined) setUploadPredProgress(prev => prev += 1);
+		return del
 	})
 }
 
-export const getOldestDocument = (collectionName: string) => {
+export const getOldestDocument = (collectionName: string, map: string) => {
 	try {
-		const q = query(collection(firestore, collectionName), orderBy("date"), limit(1))
+		const q = query(collection(firestore, collectionName), where("map", "==", map), orderBy("date"), limit(1))
 		return getDocs(q).then((snapshot) => {
 			let data: any = undefined
 			snapshot.forEach((document) => {
@@ -133,9 +137,9 @@ export const getOldestDocument = (collectionName: string) => {
 		console.error(error)
 	}
 };
-export const getOldestPredictionDocument = (collectionName: string) => {
+export const getOldestPredictionDocument = (collectionName: string, map: string) => {
 	try {
-		const q = query(collection(firestore, collectionName), where("isPrediction", "==", true), orderBy("date"), limit(1))
+		const q = query(collection(firestore, collectionName), where("map", "==", map), where("isPrediction", "==", true), orderBy("date"), limit(1))
 		return getDocs(q).then((snapshot) => {
 			let data = {}
 			snapshot.forEach((document) => {

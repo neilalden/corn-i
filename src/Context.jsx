@@ -29,9 +29,9 @@ const ContextProvider = (props) => {
 	const [oldestPrediction, setOldestPrediction] = useState(undefined)
 	useEffect(() => {
 		(async () => {
-			setOldestPrediction(await getOldestPredictionDocument(parameter))
+			setOldestPrediction(await getOldestPredictionDocument(parameter, map))
 			if (!heatMapItems) return
-			const oldest = await getOldestDocument(parameter)
+			const oldest = await getOldestDocument(parameter, map);
 			setDateToFetch(oldest?.date.toDate() ?? new Date())
 			if (refetch === false && objectKeyHasValue(recordedDataDictionary, String(category + parameter + map))) {
 				setRecordedData(recordedDataDictionary[String(category + parameter + map)].slice(-(8 * heatMapItems.length)))

@@ -61,8 +61,7 @@ const DataInputScreen = () => {
 			});
 		} else {
 			setUploadingPred(true)
-			const condition = { arg1: "isPrediction", arg2: "==", arg3: true }
-			const value = await deleteMultiple(parameter, condition);
+			const value = await deleteMultiple(parameter, map, setUploadingPredMax, setUploadPredProgress);
 			if (value === undefined)
 				uploadPrediction(map, parameter, dataFrame, setDataFrame, setRefetch, setUploadingPred, setUploadPredProgress)
 		}
@@ -107,8 +106,8 @@ const DataInputScreen = () => {
 						labelColor={"#ffffff"} //Possible value any string (color code)
 						borderRadius={8} //Possible value any number
 						minValue={0} //Possible value any number
-						currentValue={uploadDataProgress} //Possible value any number
-						maxValue={uploadingDataMax} //Possible value any number
+						currentValue={(uploadDataProgress / uploadingDataMax) * 100} //Possible value any number
+						maxValue={100} //Possible value any number
 						showLabel={true} //Possible values true, false
 					/>
 				</div>
@@ -128,8 +127,8 @@ const DataInputScreen = () => {
 						labelColor={"#ffffff"} //Possible value any string (color code)
 						borderRadius={8} //Possible value any number
 						minValue={0} //Possible value any number
-						currentValue={uploadPredProgress} //Possible value any number
-						maxValue={uploadingPredMax} //Possible value any number
+						currentValue={(uploadPredProgress / uploadingPredMax) * 100} //Possible value any number
+						maxValue={100} //Possible value any number
 						showLabel={true} //Possible values true, false
 					/>
 				</div>
