@@ -173,12 +173,6 @@ h1.title {
 	width: 30vw;
 	height: 400px;
 }
-#chartContainer {
-	display: flex;
-	justify-content: center;
-	min-width: 1000px;
-	height: 300px;
-}
 .mask {
 	width: 485px;
 	height: 335px;
@@ -275,9 +269,6 @@ select,
 	border-width: 0;
 	background-color: var(--gray200);
 	border-right: 8px solid transparent;
-}
-.disabled {
-	cursor: not-allowed;
 }
 .border-box {
 	padding: 10px;
@@ -407,7 +398,31 @@ tr:nth-child(even) {
 	background-color: #dddddd;
 }
 .h-100px {
+	height: 100px !important;
+}
+.h-150px {
+	height: 150px !important;
+}
+.h-200px {
+	height: 200px !important;
+}
+.h-250px {
+	height: 200px !important;
+}
+.h-325px {
+	height: 325px !important;
+}
+.h-300px {
 	height: 300px !important;
+}
+.h-350px {
+	height: 350px !important;
+}
+.h-375px {
+	height: 375px !important;
+}
+.h-400px {
+	height: 400px !important;
 }
 .predicted-row {
 	outline: dashed var(--yellow400);
@@ -434,4 +449,42 @@ tr:nth-child(even) {
 	padding: 10px;
 	border-radius: var(--border-radius);
 	color: var(--white);
+}
+
+.disabled {
+	cursor: not-allowed !important;
+}
+
+.Toastify__toast-body {
+	min-width: 250px;
+}
+
+#chartContainer {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	min-width: 1000px;
+	height: 350px;
+}
+.bar-scale-container {
+	height: 50px !important;
+	overflow: hidden;
+	margin-bottom: 10px;
+}
+.bar-scale {
+	height: 30px !important;
+	width: 100% !important;
+	background-image: linear-gradient(
+		to right,
+		#007399,
+		#248f8f,
+		#00b36b,
+		#33cc00,
+		#99cc00,
+		#b3b300,
+		#b39800,
+		#b37400,
+		#b33000,
+		#800000
+	);
 }

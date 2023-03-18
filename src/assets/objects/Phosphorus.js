@@ -1,4 +1,4 @@
 const minValue = 0;
-const interval = 14.5;
-const maxValue = 145;
+const interval = 3;
+const maxValue = 30;
 export const PhosphorusParameter = { minValue, maxValue, interval };

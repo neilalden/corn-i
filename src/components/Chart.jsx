@@ -13,7 +13,7 @@ import annotationPlugin from "chartjs-plugin-annotation";
 import { Line } from "react-chartjs-2";
 import { useRef, useContext } from "react";
 import { Context } from "../Context";
-import { NutrientsParameter } from "../utils/types";
+import { BarScale } from "../utils/types";
 import { findAreaColor, isDateGreater, isDateLesser, sortArrOfObj } from "../common/utils";
 import { COLOR } from "../common/colors";
 ChartJS.register(
@@ -113,21 +113,23 @@ const ChartComponent = (props) => {
 	return (
 		<div className='mt-20'>
 			<div className='flex-row justify-content-between'>
-				<code className='mb-n12'>
+				<span className='mb-n12'>
 					1 month {category}({String(parameter)}) record and predictions
-				</code>
+				</span>
 
 				<div className='button' onClick={handleAnimate}>
-					<code>Play</code>
+					<span>Play</span>
 				</div>
 			</div>
-			<div className='graph' id='chartContainer'>
-				<Line
-					className="h-100px"
-					data={data}
-					options={options}
-					ref={chartRef}
-				/>
+			<div className='graph' style={{ color: "black" }}>
+				<div id='chartContainer'  >
+					<Line
+						// className="h-300px"
+						data={data}
+						options={options}
+						ref={chartRef}
+					/>
+				</div>
 			</div>
 		</div>
 	);

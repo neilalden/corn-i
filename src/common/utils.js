@@ -123,7 +123,13 @@ export const csvJSON = (csv) => {
 	//return result; //JavaScript object
 	return JSON.stringify(result); //JSON
 };
-
+export const isCSV = (file) => {
+	const filename = file.name;
+	const stringArray = filename.split(".");
+	if (stringArray.length === 0) return null;
+	const fileType = stringArray[stringArray?.length - 1];
+	return fileType === "csv";
+};
 // add data manually
 // const x = [
 // ]

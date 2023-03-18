@@ -91,8 +91,8 @@ const Header = () => {
 								? Images.ic_disease_green_outline
 								: Images.ic_disease_gray_fill
 						}
-						onClick={() => changeCategory(Category.Disease)}
-						className='nav-image'
+						// onClick={() => changeCategory(Category.Disease)}
+						className='nav-image disabled'
 					/>
 					<img
 						alt='icon'
@@ -101,8 +101,8 @@ const Header = () => {
 								? Images.ic_pest_green_outline
 								: Images.ic_pest_gray_fill
 						}
-						onClick={() => changeCategory(Category.Pest)}
-						className='nav-image'
+						// onClick={() => changeCategory(Category.Pest)}
+						className='nav-image disabled'
 					/>
 					<img
 						alt='icon'

@@ -7,13 +7,13 @@ import { deleteMultiple } from "../service/firebase/firestore";
 
 const DataRecordScreen = () => {
     const [asc, setAsc] = useState(false)
-    const { parameter, recordedData, heatMapItems, setRefetch } = useContext(Context);
+    const { parameter, recordedData, heatMapItems, setRefetch, map } = useContext(Context);
     const sorted = sortArrOfObj(recordedData, "date", asc ? "asc" : "desc");
     const rows = getRows(sorted, heatMapItems?.length);
     const handleDeleteRow = async (event, str) => {
         event.preventDefault();
         const condition = { arg1: "dateString", arg2: "==", arg3: str }
-        const value = await deleteMultiple(parameter, condition);
+        const value = await deleteMultiple(parameter, map, condition);
         if (value === undefined) setRefetch(true);
     }
     return (

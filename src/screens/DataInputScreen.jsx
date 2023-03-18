@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import Papa from "papaparse";
-import { createData, deleteMultiple } from "../service/firebase/firestore";
+import { createData, deletePrediction } from "../service/firebase/firestore";
 import { Context, predict } from "../Context";
 import { Timestamp } from "firebase/firestore";
-import { getDaysAfter, sortArrOfObj } from "../common/utils";
+import { getDaysAfter, isCSV, sortArrOfObj } from "../common/utils";
 import { toast } from "react-toastify";
 import ProgressBar from "customizable-progress-bar";
 
@@ -21,6 +21,19 @@ const DataInputScreen = () => {
 	const commonConfig = { delimiter: "," };
 	const handleUploadData = async (event) => {
 		event.preventDefault();
+		if (dataFrame.length === 0) {
+			toast.warn('Choose file first', {
+				position: "top-center",
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+			});
+			return;
+		}
 		let oldestDataDate;
 		setUploadingData(true)
 		setUploadingDataMax(dataFrame.flatMap(_ => _).length)
@@ -61,16 +74,38 @@ const DataInputScreen = () => {
 			});
 		} else {
 			setUploadingPred(true)
-			const value = await deleteMultiple(parameter, map, setUploadingPredMax, setUploadPredProgress);
+			const value = await deletePrediction(parameter, map, setUploadingPredMax, setUploadPredProgress);
 			if (value === undefined)
 				uploadPrediction(map, parameter, dataFrame, setDataFrame, setRefetch, setUploadingPred, setUploadPredProgress)
 		}
 	}
 	const handleOpenFile = (event) => {
 		try {
-			const file = event.target.files[0]
-			if (file.size > 10240) {
-				alert("File must not be greater than 10mb")
+			const file = event.target.files[0];
+			if (file.size > 51200) {
+				toast.error('File must not be greater than 50mb', {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+				});
+				return;
+			}
+			if (!isCSV(file)) {
+				toast.error('We only accept ".csv" files', {
+					position: "top-center",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+				});
 				return;
 			}
 			Papa.parse(

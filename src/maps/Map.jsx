@@ -17,7 +17,7 @@ const Map = () => {
 	const { map } = useContext(Context);
 	return (
 		<div>
-			<code>Crop Heat Map</code>
+			<span>Crop Heat Map</span>
 			{map === Maps.BukalSur ? <BukalSur /> : undefined}
 			{map === Maps.MalabananNorte ? <MalabananNorte /> : undefined}
 			{map === Maps.MalabananSur ? <MalabananSur /> : undefined}

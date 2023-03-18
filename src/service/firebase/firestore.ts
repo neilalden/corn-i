@@ -1,3 +1,4 @@
+import { async } from "@firebase/util";
 import {
 	collection,
 	addDoc,
@@ -111,15 +112,24 @@ export const readDocument = async (collectionName: string, docId: string) => {
 	}
 };
 
-export const deleteMultiple = async (collectionName: string, map: string, setUploadingPredMax: React.Dispatch<React.SetStateAction<number>>, setUploadPredProgress: React.Dispatch<React.SetStateAction<number>>) => {
+export const deleteMultiple = async (collectionName: string, map: string, whereParams: whereQueryType,) => {
+	const q = query(collection(firestore, collectionName), where("map", "==", map), where(whereParams.arg1, whereParams.arg2, whereParams.arg3))
+	const querySnapshot = await getDocs(q);
+	return querySnapshot.forEach(async (document) => {
+		const del = await deleteDoc(doc(firestore, collectionName, document.id))
+		return del
+	})
+}
+
+export const deletePrediction = async (collectionName: string, map: string, setUploadingPredMax: React.Dispatch<React.SetStateAction<number>>, setUploadPredProgress: React.Dispatch<React.SetStateAction<number>>) => {
 
 	const q = query(collection(firestore, collectionName), where("map", "==", map), where("isPrediction", "==", true))
 	const querySnapshot = await getDocs(q);
 	setUploadingPredMax(prev => prev += querySnapshot.size)
 	return querySnapshot.forEach(async (document) => {
 		const del = await deleteDoc(doc(firestore, collectionName, document.id))
-		if (del === undefined) setUploadPredProgress(prev => prev += 1);
-		return del
+		setUploadPredProgress(prev => prev += 1);
+		return del;
 	})
 }
 
