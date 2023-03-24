@@ -60,23 +60,27 @@ export const Months = [
 
 export const BarScale = {
     Nitrogen: {
-        high: "60-90",
-        medium: "30-60",
-        low: "0-30",
+        4: "90",
+        3: "60",
+        2: "30",
+        1: "0",
     },
     Phosphorus: {
-        high: "25-30",
-        medium: "20-25",
-        low: "0-20",
+        4: "30",
+        3: "25",
+        2: "20",
+        1: "0"
     },
     Potassium: {
-        high: "20-30",
-        medium: "10-20",
-        low: "0-10",
+        4: "30",
+        3: "20",
+        2: "10",
+        1: "0"
     },
     pH: {
-        low: "0-3",
-        medium: "3-6",
-        high: "6-9",
+        4: "9",
+        3: "6",
+        2: "3",
+        1: "0"
     },
 };

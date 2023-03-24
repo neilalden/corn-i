@@ -35,7 +35,7 @@ const ChartComponent = (props) => {
 		annnotationPosition,
 		setAnnnotationPosition,
 		recordedData,
-		predictedData,
+		dateFilterString,
 		heatMapItems,
 		heatMapItemsValue,
 		setHeatMapItemsValue
@@ -114,7 +114,7 @@ const ChartComponent = (props) => {
 		<div className='mt-20'>
 			<div className='flex-row justify-content-between'>
 				<span className='mb-n12'>
-					1 month {category}({String(parameter)}) record and predictions
+					2 months {parameter} records
 				</span>
 
 				<div className='button' onClick={handleAnimate}>

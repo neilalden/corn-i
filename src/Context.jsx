@@ -14,7 +14,7 @@ import { formatDataToDisplay } from "./components/Chart";
 export const Context = createContext("Default Value");
 const ContextProvider = (props) => {
 	const [screen, setScreen] = useState(Screens.Dashboard);
-	const [map, setMap] = useState(Maps.MangilagSur);
+	const [map, setMap] = useState(Maps.MalabananNorte);
 	const [category, setCategory] = useState(Category.Nutrients);
 	const [parameter, setParameter] = useState(NutrientsParameter.Nitrogen);
 	const [heatMap, setHeatMap] = useState(undefined);
@@ -27,6 +27,7 @@ const ContextProvider = (props) => {
 	const [dateFilterOptions, setDateFilterOptions] = useState([]);
 	const [dateToFetch, setDateToFetch] = useState(undefined)
 	const [oldestPrediction, setOldestPrediction] = useState(undefined)
+	const [dateFilterString, setDateFilterString] = useState("")
 	useEffect(() => {
 		(async () => {
 			setOldestPrediction(await getOldestPredictionDocument(parameter, map))
@@ -117,7 +118,9 @@ const ContextProvider = (props) => {
 		setDateToFetch,
 		setRecordedData,
 		recordedDataDictionary,
-		oldestPrediction
+		oldestPrediction,
+		dateFilterString,
+		setDateFilterString
 	};
 	return <Context.Provider value={State}>{props.children}</Context.Provider>;
 };

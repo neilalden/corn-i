@@ -13,18 +13,18 @@ const DashboardScreen = () => {
 			<Header />
 			<div id="dashboard">
 				<div className="graph" style={{ color: "black" }}>
-					<h3><span>Kilograms per hectar</span></h3>
 					<div className="bar-scale-container">
 						<div className='flex-row justify-content-between'>
-							<span >{BarScale[parameter].low}</span>
-							<span >{BarScale[parameter].medium}</span>
-							<span >{BarScale[parameter].high}</span>
+							<span >{BarScale[parameter][1]} kg/ha</span>
+							<span >{BarScale[parameter][2]} kg/ha</span>
+							<span >{BarScale[parameter][3]} kg/ha</span>
+							<span >{BarScale[parameter][4]} kg/ha</span>
 						</div>
 						<div className="bar-scale">
 						</div>
 					</div>
 				</div>
-				<div className='flex-row justify-content-between'>
+				<div className='flex-row justify-content-between mt-10'>
 					<Map />
 					&nbsp;&nbsp;&nbsp;&nbsp;
 					<Graph />

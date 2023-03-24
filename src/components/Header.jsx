@@ -16,15 +16,16 @@ const Header = () => {
 		setDateFilterOptions,
 		recordedDataDictionary,
 		setRecordedData,
-		heatMapItems
+		heatMapItems, dateFilterString, setDateFilterString
 	} = useContext(Context);
-	const [dateFilterString, setDateFilterString] = useState("")
+
 	const changeMap = (e) => {
 		setMap(e.target.value);
 		setDateFilterOptions([]);
 	};
 	const changeDate = (e) => {
 		// setMap(e.target.value);
+		e.preventDefault();
 		const filter = e.target.value
 		setDateFilterString(filter);
 		const collection = recordedDataDictionary[String(category + parameter + map)]

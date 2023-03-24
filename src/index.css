@@ -312,6 +312,9 @@ path:hover .tooltiptext {
 .mt-20 {
 	margin-top: 20px;
 }
+.mt-10 {
+	margin-top: 10px;
+}
 .mxwidth-1280 {
 	max-width: 1280px !important;
 }
@@ -469,7 +472,6 @@ tr:nth-child(even) {
 .bar-scale-container {
 	height: 50px !important;
 	overflow: hidden;
-	margin-bottom: 10px;
 }
 .bar-scale {
 	height: 30px !important;
